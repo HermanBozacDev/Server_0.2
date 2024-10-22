@@ -1,0 +1,35 @@
+[gd_scene load_steps=7 format=3 uid="uid://b7lgfp76j43ap"]
+
+[ext_resource type="PackedScene" uid="uid://dg57lusil5yw4" path="res://Scenes/Enemies/Hurtbox.tscn" id="1_bs4xd"]
+[ext_resource type="Script" path="res://Scenes/Enemies/Enemies.gd" id="1_lith6"]
+[ext_resource type="PackedScene" uid="uid://cmdfo0ikgpsi" path="res://Scenes/Enemies/WanderController.tscn" id="2_hpfdh"]
+[ext_resource type="PackedScene" uid="uid://bs8t624o7qtv6" path="res://Scenes/Enemies/PlayerDetectionZone.tscn" id="3_ihyig"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_h2hk7"]
+radius = 8.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_1hv3s"]
+radius = 8.0
+
+[node name="Enemies" type="CharacterBody2D" groups=["Enemies"]]
+collision_layer = 2
+collision_mask = 7
+script = ExtResource("1_lith6")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_h2hk7")
+
+[node name="Hitbox" type="Area2D" parent="."]
+collision_layer = 16
+collision_mask = 32
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
+shape = SubResource("CircleShape2D_1hv3s")
+
+[node name="Hurtbox" parent="." instance=ExtResource("1_bs4xd")]
+
+[node name="WanderController" parent="." instance=ExtResource("2_hpfdh")]
+
+[node name="PlayerDetectionZone" parent="." instance=ExtResource("3_ihyig")]
+
+[connection signal="body_entered" from="Hitbox" to="." method="_on_hitbox_body_entered"]

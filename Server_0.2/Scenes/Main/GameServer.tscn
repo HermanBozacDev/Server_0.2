@@ -1,0 +1,25 @@
+[gd_scene load_steps=7 format=3 uid="uid://jn66l3ncfy7h"]
+
+[ext_resource type="Script" path="res://Scenes/Main/GameServer.gd" id="1_8p4xf"]
+[ext_resource type="Script" path="res://Scenes/Main/PlayerVerification.gd" id="2_jag3l"]
+[ext_resource type="Script" path="res://Scenes/Main/StateProcessing.gd" id="3_gtg0g"]
+[ext_resource type="Script" path="res://Scenes/Main/LootProcessing.gd" id="4_cdbp5"]
+[ext_resource type="Script" path="res://Scenes/Main/CiudadPrincipalHandler.gd" id="5_418n1"]
+[ext_resource type="PackedScene" uid="uid://icgse270baxj" path="res://Scenes/Maps/ServerCiudadPrincipal.tscn" id="6_lvwo1"]
+
+[node name="GameServer" type="Node"]
+script = ExtResource("1_8p4xf")
+
+[node name="PlayerVerification" type="Node" parent="."]
+script = ExtResource("2_jag3l")
+
+[node name="StateProcessing" type="Node" parent="."]
+script = ExtResource("3_gtg0g")
+
+[node name="LootProcessing" type="Node" parent="."]
+script = ExtResource("4_cdbp5")
+
+[node name="CiudadPrincipalHandler" type="Node" parent="."]
+script = ExtResource("5_418n1")
+
+[node name="CiudadPrincipal" parent="." instance=ExtResource("6_lvwo1")]

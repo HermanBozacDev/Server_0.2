@@ -1,0 +1,72 @@
+{
+  "elf": {
+    "STR": 24,
+    "DEX": 26,
+    "INT": 26,
+    "VIT": 24,
+    "HEALTH": 500,
+    "MANA": 100,
+    "MAXHEALTH": 500,
+    "MAXMANA": 24,
+    "HEALTHREG": 0.004,
+    "MANAREG": 0.0002,
+    "SkillAMage": "Ice Spear",
+    "SkillAWarrior": ["WindStrike","Poison","ManaBlessing","LearningCast"]
+  },
+  "darkelf": {
+    "STR": 26,
+    "DEX": 26,
+    "INT": 24,
+    "VIT": 24,
+    "HEALTH": 200,
+    "MANA": 100,
+    "MAXHEALTH": 24,
+    "MAXMANA": 24,
+    "HEALTHREG": 0.004,
+    "MANAREG":0.0004,
+    "SkillAMage": "Ice Spear",
+    "SkillAWarrior": "HotSpot"
+  },
+  "human": {
+    "STR": 24,
+    "DEX": 26,
+    "INT": 26,
+    "VIT": 24,
+    "HEALTH": 200,
+    "MANA": 100,
+    "MAXHEALTH": 24,
+    "MAXMANA": 24,
+    "HEALTHREG": 0.004,
+    "MANAREG": 0.0004,
+    "SkillAMage": "IceSpear",
+    "SkillAWarrior": "HotSpot"
+  },
+  "orc": {
+    "STR": 26,
+    "DEX": 24,
+    "INT": 24,
+    "VIT": 26,
+    "HEALTH": 200,
+    "MANA": 100,
+    "MAXHEALTH": 24,
+    "MAXMANA": 24,
+    "HEALTHREG": 0.004,
+    "MANAREG": 0.0004,
+    "SkillAMage": "IceSpear",
+    "SkillAWarrior": "HotSpot"
+  },
+  "dwarven": {
+    "STR": 24,
+    "DEX": 26,
+    "INT": 24,
+    "VIT": 26,
+    "HEALTH": 200,
+    "MANA": 100,
+    "MAXHEALTH": 24,
+    "MAXMANA": 24,
+    "HEALTHREG": 0.004,
+    "MANAREG": 0.0004,
+    "SkillAMage": "IceSpear",
+    "SkillAWarrior": "HotSpot"
+  }
+}   
