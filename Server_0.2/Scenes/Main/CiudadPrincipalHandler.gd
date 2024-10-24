@@ -112,7 +112,9 @@ func EnemyHurt(enemy_id, damage, player_id):
 			enemy_list[enemy_key]["S"] = "Dead"
 			open_locations.append(occupied_locations[enemy_key])
 			occupied_locations.erase(enemy_key)
-
+			var key = "UpdateInventory"
+			var new_value = ServerData.inventary_data[player_nickname]
+			get_node("/root/GameServer").ServerSendDataToOneClient(player_id,key,new_value)
 
 func PlayerHit(player_hurt, damage, _attack_caster_id):
 	var new_nickname = get_node("/root/GameServer/" + player_hurt).player_nickname

@@ -121,6 +121,9 @@ func CheckForNewSkills():
 				LearningSkill("ManaTouch")
 				LearningSkill("StrongMind")
 				LearningSkill("BoostMana")
+				var key = "UpdateSkills"
+				var new_value = ServerData.learn_skills_data[player_nickname]
+				get_node("/root/GameServer").ServerSendDataToOneClient(player_rpc_id,key,new_value)
 			else:
 				print("soy wizard")
 				print("nivel5")
@@ -132,6 +135,9 @@ func CheckForNewSkills():
 				LearningSkill("LifeHelp")
 				LearningSkill("ShadowShield")
 				LearningSkill("BattleFervor")
+				var key = "UpdateSkills"
+				var new_value = ServerData.learn_skills_data[player_nickname]
+				get_node("/root/GameServer").ServerSendDataToOneClient(player_rpc_id,key,new_value)
 			else:
 				print("soy wizard")
 				print("nivel10")
@@ -143,6 +149,9 @@ func CheckForNewSkills():
 				LearningSkill("WaterArrow")
 				LearningSkill("StrongHearth")
 				LearningSkill("Valor")
+				var key = "UpdateSkills"
+				var new_value = ServerData.learn_skills_data[player_nickname]
+				get_node("/root/GameServer").ServerSendDataToOneClient(player_rpc_id,key,new_value)
 			else:
 				print("soy wizard")
 				print("nivel15")
@@ -157,16 +166,3 @@ func LearningSkill(skill):
 	ServerData.skill_data[skill]["SkillDamage"]
 	]
 	ServerData.SaveLearnSkill()
-	
-func esperate():
-	for skill in ServerData.skill_data:
-		if ServerData.skill_data[skill].SkillLevel <= player_stats["level"]:
-			ServerData.learn_skills_data[player_nickname][skill] = [skill,ServerData.skill_data[skill].SkillActivePasive]
-	ServerData.SaveLearnSkill()
-	
-	print("yendo al game server")
-	var key = "new_skills"
-	var player_id = get_name()
-	var new_value = ServerData.learn_skills_data[player_nickname]
-	print("ServerData.learn_skills_data[player_nickname]",ServerData.learn_skills_data[player_nickname])
-	get_parent().UpdateKeyState(player_id,key,new_value)

@@ -134,10 +134,12 @@ func _on_peer_connected(player_id):
 				]
 			rpc_id(player_id, "ServerSendDataToOneClient", player_id,key,new_player_stats)
 		"Inventory":
+			print("llegue inventory")
 			var nickname = get_node("/root/GameServer/" + str(player_id)).player_nickname
 			ServerData.inventary_data[nickname] = value
 			ServerData.SaveInventory()
 		"Hotbar":
+			print("llegue hotbar")
 			var nickname = get_node("/root/GameServer/" + str(player_id)).player_nickname
 			ServerData.hot_bar_data[nickname] = value
 			ServerData.SaveHotBar()
