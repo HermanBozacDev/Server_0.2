@@ -1,6 +1,6 @@
 {
   "SkullMan": {
-    "EXP": 20,
+    "EXP": 2000,
     "P": null,
     "EnemyHealth": 100,
     "EnemyMaxHealth": 100,
@@ -8,7 +8,7 @@
     "time_out": 5,
     "A": null,
     "Gold" : 100,
-    "Damage": 3
+    "Damage": 5
   },
   "Mage": {            
     "EXP": 50,

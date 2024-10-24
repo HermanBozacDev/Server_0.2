@@ -52,7 +52,6 @@ func _on_peer_connected(player_id):
 	var player_id = multiplayer_api.get_remote_sender_id()
 	match key:
 		"FetchServerTime":
-			print("FetchServerTime")
 			var new_value = [Time.get_ticks_msec(),value]
 			ServerSendDataToOneClient(player_id,key,new_value)
 		"DetermineLatency":
@@ -74,22 +73,44 @@ func _on_peer_connected(player_id):
 				rpc_id(player_id, "ServerSendDataToOneClient", player_id,key,value)
 				#ReturnNewPlayerRegister(stats, ServerData.learn_skills_data[value[1]])
 		"PlayerState":
-			#value = player_state
+			#print("AVER ",player_state_collection,value)
+			# Si el jugador ya tiene un estado en player_state_collection
 			if player_state_collection.has(str(player_id)):
-				player_state_collection[str(player_id)] = value
+				#  print("User SI tiene PLAYERSTATECOLLECTION",value)
+				# Actualizar el estado existente
+				var current_state = player_state_collection[str(player_id)]
+				var updated_state = CompletePlayerState(player_id, current_state,value)
+				player_state_collection[str(player_id)] = updated_state
+				#print("player_state_collection[str(player_id)]",player_state_collection[str(player_id)])
+				# Actualizar la posición del jugador en el nodo del servidor
 				var player_node = get_node_or_null("/root/GameServer/" + str(player_id))
 				if player_node:
-					player_node.SetPosition(value["Px"], value["Py"])
-					# Obtener posición y mapa
+					player_node.UpdateServerDataKey("Px",updated_state["Px"])
+					player_node.UpdateServerDataKey("Py",updated_state["Py"])
 					var position = player_node.GetPosition(player_node.player_nickname)
-					var map = value["M"]
-					# Mover al jugador en el nodo correspondiente si existe
+					var map = updated_state["M"]
 					var other_player_node = get_node_or_null("/root/GameServer/" + str(map) + "/MapElements/OtherPlayers/" + str(player_id))
 					if other_player_node:
 						get_node("/root/GameServer/" + str(map)).MovePlayer(player_id, position)
 			else:
+				# Si el jugador no tiene estado en player_state_collection
 				print("User no tiene PLAYERSTATECOLLECTION")
-				player_state_collection[str(player_id)] = value
+				# Crear un nuevo estado y completarlo con los datos de la base de datos
+				var new_state = CompleteFirstPlayerState(player_id, value)
+				player_state_collection[str(player_id)] = new_state
+				
+				# Crear el nodo del jugador en el servidor si es necesario
+				var player_node = get_node_or_null("/root/GameServer/" + str(player_id))
+				if player_node:
+					player_node
+					player_node.UpdateServerDataKey("Px",new_state["Px"])
+					player_node.UpdateServerDataKey("Py",new_state["Py"])
+
+					var position = player_node.GetPosition(player_node.player_nickname)
+					var map = new_state["M"]
+					var other_player_node = get_node_or_null("/root/GameServer/" + str(map) + "/MapElements/OtherPlayers/" + str(player_id))
+					if other_player_node:
+						get_node("/root/GameServer/" + str(map)).MovePlayer(player_id, position)
 		"PlayerPool":
 			#value = username
 			ServerData.PlayerPoolSearch(player_id, value)
@@ -113,6 +134,22 @@ func _on_peer_connected(player_id):
 				value
 				]
 			rpc_id(player_id, "ServerSendDataToOneClient", player_id,key,new_player_stats)
+		"Inventory":
+			var nickname = get_node("/root/GameServer/" + str(player_id)).player_nickname
+			ServerData.inventary_data[nickname] = value
+			ServerData.SaveInventory()
+		"Hotbar":
+			var nickname = get_node("/root/GameServer/" + str(player_id)).player_nickname
+			ServerData.hot_bar_data[nickname] = value
+			ServerData.SaveHotBar()
+		"PlayerAttack":
+			
+			#value = [_position, animation_vector, spawn_time, a_rotation, a_position, a_direction, map, attack_name, attack_type]
+			get_node(str(value[6])).SpawnAttack(value[2], value[3], value[4], value[5], player_id, value[6], value[7], value[8])
+			key = "SpawnAttack"
+			var new_value = [value[0],value[1],value[2],value[3],value[6],player_id]
+			ServerSendDataToAllClients(key,new_value)
+			#rpc_id(0, "ReceiveAttack", a_position, animation_vector, spawn_time, a_rotation , map,player_id)
 
 
 
@@ -127,5 +164,60 @@ func _on_peer_connected(player_id):
 
 
 
+
+
+
 @rpc func ServerSendWorldState(world_state):
 	rpc_id(0, "ServerSendWorldState", world_state)
+
+
+
+
+
+
+
+
+# Función para completar los datos del jugador
+func CompletePlayerState(player_id, current_state,client_stat):
+	var player_node = get_node_or_null("/root/GameServer/" + str(player_id))
+	# Obtener los datos adicionales del jugador desde la base de datos
+	var player_data_from_db = ServerData.player_data[player_node.player_nickname]
+	
+	# Completar el estado del jugador con los datos que faltan
+	current_state["L"] = player_data_from_db["level"]
+	current_state["H"] = player_data_from_db["health"]
+	current_state["mH"] = player_data_from_db["maxhealth"]
+	current_state["Ma"] = player_data_from_db["mana"]
+	current_state["mMa"] = player_data_from_db["maxmana"]
+	current_state["EXP"] = player_data_from_db["exp"]
+	current_state["EXPFT"] = player_data_from_db["expFaltante"]
+	current_state["EXPRQ"] = player_data_from_db["expRequerida"]
+	current_state["M"] = player_data_from_db["M"]
+	current_state["Px"] = client_stat["Px"]
+	current_state["Py"] = client_stat["Py"]
+	current_state["A"] = client_stat["A"]
+	current_state["T"] = client_stat["T"]
+	return current_state
+
+
+# Función para completar los datos del jugador
+func CompleteFirstPlayerState(player_id, value):
+	var player_node = get_node_or_null("/root/GameServer/" + str(player_id))
+	# Obtener los datos adicionales del jugador desde la base de datos
+	var player_data_from_db = ServerData.player_data[player_node.player_nickname]
+	
+	# Completar el estado del jugador con los datos que faltan
+	value["L"] = player_data_from_db["level"]
+	value["H"] = player_data_from_db["health"]
+	value["mH"] = player_data_from_db["maxhealth"]
+	value["Ma"] = player_data_from_db["mana"]
+	value["mMa"] = player_data_from_db["maxmana"]
+	value["M"] = player_data_from_db["M"]
+	value["EXP"] = player_data_from_db["exp"]
+	value["EXPFT"] = player_data_from_db["expFaltante"]
+	value["EXPRQ"] = player_data_from_db["expRequerida"]
+	value["Px"] = value["Px"]
+	value["Py"] = value["Py"]
+	value["A"] = value["A"]
+	value["T"] = value["T"]
+	return value

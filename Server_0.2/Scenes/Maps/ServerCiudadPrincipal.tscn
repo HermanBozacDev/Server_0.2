@@ -44,3 +44,6 @@ tile_set = ExtResource("1_yvr3k")
 script = ExtResource("2_qtip5")
 
 [node name="Camera2D" type="Camera2D" parent="CameraMen"]
+
+[node name="Marker2D" type="Marker2D" parent="."]
+position = Vector2(162, 331)

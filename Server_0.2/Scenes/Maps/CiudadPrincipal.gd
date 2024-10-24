@@ -33,6 +33,7 @@ func SpawnAttack(_spawn_time,  a_rotation, a_position, a_direction, player_id,ma
 
 
 
+
 func SpawnEnemy(enemy_id, location):
 	var type = get_node("/root/GameServer/CiudadPrincipalHandler").enemy_list[str(enemy_id)]["T"]
 	match type:

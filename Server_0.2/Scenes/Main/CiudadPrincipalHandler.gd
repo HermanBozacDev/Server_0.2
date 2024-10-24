@@ -6,9 +6,25 @@ var enemy_types = ["SkullMan"] #,"Demon"list of enemies that  can spawn on the m
 var map = "CiudadPrincipal"
 
 
-var open_locations =  [0,1,2,3,4,5]
-var enemy_spawn_points = [Vector2(-48,-32),Vector2(-50,100),Vector2(100,0),Vector2(0,100),Vector2(-100,0),Vector2(0,110)]
-var enemy_maximum = 6
+var open_locations =  [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14]
+var enemy_spawn_points = [
+	Vector2(-600,-100),
+	Vector2(-800,50),
+	Vector2(-950,0),
+	Vector2(-1050,150),
+	Vector2(-115,-50),
+	Vector2(-800,-250),
+	Vector2(-1000,-308),
+	Vector2(-430,-380),
+	Vector2(-1250,-150),
+	Vector2(550,275),
+	Vector2(650,75),
+	Vector2(850,-50),
+	Vector2(1000,200),
+	Vector2(-90,330),
+	Vector2(160,331),
+	]
+var enemy_maximum = 15
 #var open_locations =  [0]
 #var enemy_spawn_points = [Vector2(0,64)] 
 #var enemy_maximum = 1
@@ -51,7 +67,7 @@ func SpawnEnemy():
 					"TO": ServerData.enemy_data[type]["time_out"],
 					"A": ServerData.enemy_data[type]["A"],
 					"M": "Exterior_1",
-					"G": ServerData.enemy_data[type]["Gold"]
+					"G": ServerData.enemy_data[type]["Gold"],
 				}
 		
 		get_parent().get_node("CiudadPrincipal").SpawnEnemy(enemy_id_counter, location)
@@ -76,32 +92,26 @@ func ReceiveEnemyState(enemy_state, enemy_id):
 
 # Función que controla el daño a los enemigos
 func EnemyHurt(enemy_id, damage, player_id):
-	get_node("/root/GameServer").SendEnemyHurt(enemy_id,map)
+	#get_node("/root/GameServer").SendEnemyHurt(enemy_id,map)
 	# Convertir enemy_id a string para asegurarse de que se accede correctamente
 	var enemy_key = str(enemy_id)
-	if enemy_list[enemy_key]["EnemyHealth"] <= 0:
+	if enemy_list[enemy_key]["H"] <= 0:
 		pass
 	else:
-		enemy_list[enemy_key]["EnemyHealth"] -= damage
-		if enemy_list[enemy_key]["EnemyHealth"] <= 0:
-			print("ESTOY MUERTO")
-			
-			get_node("/root/GameServer/" + str(player_id)).SetExp(enemy_list[enemy_id]["EXP"])
-			get_node("/root/GameServer/" + str(player_id)).SetGold(enemy_list[enemy_id]["Gold"])
-			get_parent().get_node("LootProcessing").DetermineLootCount(enemy_list[enemy_id]["TYPE"])
-			get_parent().get_node("LootProcessing").LootSelector(enemy_list[enemy_id]["TYPE"],get_node("/root/GameServer/" + str(player_id)).player_nickname,player_id,map)
-			
-			get_node("/root/GameServer/CiudadPrincipal/MapElements/Enemies/" + enemy_key).set_physics_process(false)
-			get_node("/root/GameServer/CiudadPrincipal/MapElements/Enemies/" + enemy_key).queue_free()
-			enemy_list[enemy_key]["EnemyState"] = "Dead"
-			
-			# Asegurarse de que las claves de occupied_locations son strings
+		enemy_list[enemy_key]["H"] -= damage
+		if enemy_list[enemy_key]["H"] <= 0:
+			var loot_node = get_parent().get_node("LootProcessing")
+			var player_nickname = get_node("/root/GameServer/" + str(player_id)).player_nickname
+			var enemy_node = get_node("/root/GameServer/CiudadPrincipal/MapElements/Enemies/" + enemy_key)
+			var player_node = get_node("/root/GameServer/" + str(player_id))
+			player_node.SetExp(enemy_list,enemy_id)
+			loot_node.DetermineLootCount(enemy_list[enemy_id]["T"])
+			loot_node.LootSelector(enemy_list[enemy_id]["T"],player_nickname,player_id,map)
+			enemy_node.set_physics_process(false)
+			enemy_node.queue_free()
+			enemy_list[enemy_key]["S"] = "Dead"
 			open_locations.append(occupied_locations[enemy_key])
 			occupied_locations.erase(enemy_key)
-			print("aca ya mate ya di experiencia oro y guarde el loot")
-			var key = "stats"
-			var new_value = get_node("/root/GameServer/" + str(player_id)).GetStats()
-			get_node("/root/GameServer").UpdateKeyState(player_id,key,new_value)
 
 
 func PlayerHit(player_hurt, damage, _attack_caster_id):

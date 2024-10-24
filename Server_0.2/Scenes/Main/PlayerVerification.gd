@@ -58,6 +58,7 @@ func CreatePlayerContainer(player_id, nickname, new_class):
 	new_player_container.player_nickname = nickname
 	new_player_container.player_clase = new_class
 	new_player_container.player_stats = ServerData.player_data[nickname]
+	new_player_container.player_rpc_id = player_id
 	
 	# Agrega el contenedor del jugador a la interfaz principal
 	get_parent().add_child(new_player_container, true)

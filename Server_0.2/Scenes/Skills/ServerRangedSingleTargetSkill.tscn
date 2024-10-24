@@ -1,13 +1,16 @@
-[gd_scene load_steps=3 format=3 uid="uid://ckcxlwygirump"]
+[gd_scene load_steps=4 format=3 uid="uid://ckcxlwygirump"]
 
 [ext_resource type="Script" path="res://Scenes/Skills/ServerRangedSingleTargetSkill.gd" id="1_nc6pv"]
 
 [sub_resource type="CircleShape2D" id="1"]
 radius = 3.0
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_806mc"]
+radius = 2.0
+
 [node name="RangedSingleTargetSkill" type="RigidBody2D"]
-collision_layer = 64
-collision_mask = 49
+collision_layer = 0
+collision_mask = 0
 mass = 0.00102041
 gravity_scale = 0.0
 contact_monitor = true
@@ -16,4 +19,11 @@ script = ExtResource("1_nc6pv")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("1")
 
-[connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[node name="Hitbox" type="Area2D" parent="."]
+collision_layer = 128
+collision_mask = 19
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
+shape = SubResource("CircleShape2D_806mc")
+
+[connection signal="body_entered" from="Hitbox" to="." method="_on_hitbox_body_entered"]

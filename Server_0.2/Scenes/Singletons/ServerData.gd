@@ -61,7 +61,6 @@ func SavePlayers() -> void:
 	save_json("user://PlayerData.json", player_data)
 
 func SaveAccounts() -> void:
-	print("account data",account_data)
 	print("Registrando un nuevo personaje en una cuenta")
 	save_json("user://AccountData.json", account_data)
 
@@ -106,7 +105,8 @@ func CreateNewPlayerDatabase(value):
 			"Py": 0,
 			"M": "CiudadPrincipal",
 			"expFaltante": 100,
-			"expRequerida": 100
+			"expRequerida": 100,
+			"T": 0
 		}
 		inventary_data[value[1]] = {}
 		hot_bar_data[value[1]] = {}
@@ -115,13 +115,34 @@ func CreateNewPlayerDatabase(value):
 		match type:
 			"wizard":
 				var skill = class_data[value[2]]["SkillAMage"]
-				learn_skills_data[value[1]] = {skill: [skill, skill_data[skill]["SkillActivePasive"]]}
+				learn_skills_data[value[1]] = {
+					skill: [
+						skill, 
+						skill_data[skill]["SkillActivePasive"], 
+						skill_data[skill]["SkillType"],
+						skill_data[skill]["ProjectileSpeed"],
+						skill_data[skill]["SkillDamage"]
+						
+						]}
 			"fighter":
 				for skill in class_data[value[2]]["SkillAWarrior"]:
 					if !learn_skills_data.has(value[1]):
-						learn_skills_data[value[1]] = {skill: [skill, skill_data[skill]["SkillActivePasive"]]}
+						learn_skills_data[value[1]] = {
+							skill: [
+								skill, 
+								skill_data[skill]["SkillActivePasive"], 
+								skill_data[skill]["SkillType"],
+								skill_data[skill]["ProjectileSpeed"],
+								skill_data[skill]["SkillDamage"]
+								]}
 					else:
-						learn_skills_data[value[1]][skill] = [skill, skill_data[skill]["SkillActivePasive"]]
+						learn_skills_data[value[1]][skill] = [
+							skill, 
+							skill_data[skill]["SkillActivePasive"], 
+							skill_data[skill]["SkillType"],
+							skill_data[skill]["ProjectileSpeed"],
+							skill_data[skill]["SkillDamage"]
+							]
 						
 
 		# Guardar los datos
@@ -158,8 +179,6 @@ func CreatePlayerSave(value):
 
 # Función para buscar personajes de un usuario y devolver el pool de personajes
 func PlayerPoolSearch(player_id, username):
-	print("Búsqueda de jugadores:", username, player_id, account_data)
-	print("account data:", account_data)
 	
 	# Crear un diccionario vacío para almacenar el pool de personajes
 	var player_pool: Dictionary = {}
@@ -177,7 +196,6 @@ func PlayerPoolSearch(player_id, username):
 			player_pool[username][nickname] = user_characters[nickname]  
 	else:
 		print("Usuario no encontrado:", username)
-	print("Resultado de la búsqueda:", player_pool)
 	# Enviar la respuesta al servidor con el pool de personajes
 	var key = "PlayerPool"
 	get_node("/root/GameServer").ServerSendDataToOneClient(player_id, key, player_pool)
