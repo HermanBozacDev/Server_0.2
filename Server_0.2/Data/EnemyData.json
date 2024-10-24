@@ -1,6 +1,6 @@
 {
   "SkullMan": {
-    "EXP": 2000,
+    "EXP": 10000,
     "P": null,
     "EnemyHealth": 100,
     "EnemyMaxHealth": 100,

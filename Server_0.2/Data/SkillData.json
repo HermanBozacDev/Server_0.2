@@ -54,7 +54,7 @@
   },
   "ManaTouch": {
 		"SkillName": "ManaTouch",
-		"SkillType": "RangedSingleTargetSkill",
+		"SkillType": "TargetBuff",
 		"SkillDamage": "N/A",
 		"SkillPower": 10,
 		"ProjectileSpeed": 300,
@@ -71,8 +71,8 @@
   "WaterBubble": {
 		"SkillName": "WaterBubble",
 		"SkillType": "RangedSingleTargetSkill",
-		"SkillDamage": "N/A",
-		"SkillPower": 10,
+		"SkillDamage": 25,
+		"SkillPower": 25,
 		"ProjectileSpeed": 300,
 		"SkillRadius": "N/A",
 		"DamageDelayTime": "N/A",
@@ -102,7 +102,7 @@
   },
   "FastWalk": {
 		"SkillName": "FastWalk",
-		"SkillType": "RangedSingleTargetSkill",
+		"SkillType": "TargetBuff",
 		"SkillDamage": "N/A",
 		"SkillPower": 10,
 		"ProjectileSpeed": 300,
@@ -119,8 +119,8 @@
   "WaterArrow": {
 		"SkillName": "WaterArrow",
 		"SkillType": "RangedSingleTargetSkill",
-		"SkillDamage": "N/A",
-		"SkillPower": 10,
+		"SkillDamage": 100,
+		"SkillPower": 100,
 		"ProjectileSpeed": 300,
 		"SkillRadius": "N/A",
 		"DamageDelayTime": "N/A",

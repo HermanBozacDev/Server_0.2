@@ -102,7 +102,6 @@ func _on_peer_connected(player_id):
 				# Crear el nodo del jugador en el servidor si es necesario
 				var player_node = get_node_or_null("/root/GameServer/" + str(player_id))
 				if player_node:
-					player_node
 					player_node.UpdateServerDataKey("Px",new_state["Px"])
 					player_node.UpdateServerDataKey("Py",new_state["Py"])
 

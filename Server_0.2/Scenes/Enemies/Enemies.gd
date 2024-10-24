@@ -104,7 +104,7 @@ func ChaseMove(direction, delta):
 # Función de ataque
 func Attack():
 	is_attaking = true
-	
+	print("attak")
 	var damage =  ServerData.enemy_data[type[0]]["Damage"]
 	get_node("/root/GameServer/" + str(target_attack)).ApplyDamageOnPlayer(damage)
 	await get_tree().create_timer(1.5).timeout

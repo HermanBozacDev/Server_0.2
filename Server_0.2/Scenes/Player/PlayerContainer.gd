@@ -113,11 +113,9 @@ func LevelUp():
 
 
 func CheckForNewSkills():
-	print("si")
 	match ServerData.player_data[player_nickname]["level"]:
 		5:
 			if ServerData.player_data[player_nickname]["type"] ==  "fighter":
-				print("soy fighter")
 				print("nivel5")
 				LearningSkill("MindSlow")
 				LearningSkill("ManaTouch")
@@ -129,7 +127,6 @@ func CheckForNewSkills():
 
 		10:
 			if ServerData.player_data[player_nickname]["type"] ==  "fighter":
-				print("soy fighter")
 				print("nivel10")
 				LearningSkill("WaterBubble")
 				LearningSkill("LifeHelp")
@@ -141,7 +138,6 @@ func CheckForNewSkills():
 
 		15:
 			if ServerData.player_data[player_nickname]["type"] ==  "fighter":
-				print("soy fighter")
 				print("nivel15")
 				LearningSkill("FastWalk")
 				LearningSkill("WaterArrow")
@@ -160,7 +156,8 @@ func LearningSkill(skill):
 	ServerData.skill_data[skill]["ProjectileSpeed"],
 	ServerData.skill_data[skill]["SkillDamage"]
 	]
-
+	ServerData.SaveLearnSkill()
+	
 func esperate():
 	for skill in ServerData.skill_data:
 		if ServerData.skill_data[skill].SkillLevel <= player_stats["level"]:

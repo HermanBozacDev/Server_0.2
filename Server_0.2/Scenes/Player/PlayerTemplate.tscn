@@ -6,8 +6,8 @@
 radius = 8.0
 
 [node name="PlayerTemplate" type="CharacterBody2D" groups=["Players"]]
-collision_layer = 0
-collision_mask = 0
+collision_layer = 2
+collision_mask = 153
 script = ExtResource("1_2kcv3")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]

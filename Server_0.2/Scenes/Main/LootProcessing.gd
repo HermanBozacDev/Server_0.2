@@ -37,7 +37,7 @@ func LootSelector(enemy_name, player_nickname, player_id, map):
 	_on_LootButton_pressed(player_nickname, loot_dic, player_id, map)
 
 # Acción al presionar el botón de loot
-func _on_LootButton_pressed(nickname, my_loot_dic, player_id, _map):
+func _on_LootButton_pressed(nickname, my_loot_dic, _player_id, _map):
 	for key_loot in my_loot_dic.keys():
 		@warning_ignore("unused_variable")
 		var my_key_inven
@@ -66,9 +66,6 @@ func _on_LootButton_pressed(nickname, my_loot_dic, player_id, _map):
 			loot_dic.erase(key_loot)
 			
 	ServerData.SaveInventory()
-	var key = "inventory"
-	var new_value = ServerData.inventary_data[nickname]
-	#get_parent().UpdateKeyState(player_id,key,new_value)
 
 # Verifica si hay espacio disponible en el inventario
 func checkslot(nickname):

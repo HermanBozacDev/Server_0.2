@@ -18,6 +18,7 @@ shape = SubResource("CircleShape2D_h2hk7")
 [node name="WanderController" parent="." instance=ExtResource("2_hpfdh")]
 
 [node name="PlayerDetectionZone" parent="." instance=ExtResource("3_ihyig")]
-visible = false
+collision_layer = 8
+collision_mask = 2
 
 [editable path="WanderController"]
