@@ -19,5 +19,7 @@ func _physics_process(_delta):
 			# Añade el tiempo actual del sistema en milisegundos
 			world_state["T"] = Time.get_ticks_msec()
 			world_state["CiudadPrincipal"] = get_node("../CiudadPrincipalHandler").enemy_list
+			world_state["Mapa2"] = get_node("../Mapa2Handler").enemy_list
 			ServerData.SavePlayers()
 			get_parent().ServerSendWorldState(world_state)
+			#print("             FULL WORLD STATE",world_state)

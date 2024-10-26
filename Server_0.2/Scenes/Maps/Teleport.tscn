@@ -1,0 +1,16 @@
+[gd_scene load_steps=3 format=3 uid="uid://bn3decqr0jkci"]
+
+[ext_resource type="Script" path="res://Scenes/Maps/Teleport.gd" id="1_ihviv"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_e42wv"]
+size = Vector2(256, 16)
+
+[node name="Teleport" type="Area2D"]
+collision_layer = 256
+collision_mask = 2
+script = ExtResource("1_ihviv")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_e42wv")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

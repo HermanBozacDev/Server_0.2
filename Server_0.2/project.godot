@@ -58,10 +58,7 @@ d={
 2d_physics/layer_6="EnemyHurtbox"
 2d_physics/layer_7="EnemyHitbox"
 2d_physics/layer_8="RangedSingleTargetSkill"
-
-[physics]
-
-common/physics_ticks_per_second=120
+2d_physics/layer_9="Teleport"
 
 [rendering]
 

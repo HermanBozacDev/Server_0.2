@@ -32,7 +32,11 @@ func _on_hitbox_body_entered(body: Node2D) -> void:
 			"TileMapLayer":
 				return
 			"CharacterBody2D":
-				body.ApplyDamageOnSelf(self)
+				if body.has_method("ApplyDamageOnSelf"):
+					body.ApplyDamageOnSelf(self)
+				else:
+					print("ME COMI UN HIT DE MIS PROPIAS BALAS MEPA")
+					return
 		get_node("CollisionShape2D").set_deferred("disabled", true)
 		self.hide()
 	else:

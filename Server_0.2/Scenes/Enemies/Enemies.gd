@@ -105,13 +105,17 @@ func ChaseMove(direction, delta):
 func Attack():
 	is_attaking = true
 	print("attak")
-	var damage =  ServerData.enemy_data[type[0]]["Damage"]
-	get_node("/root/GameServer/" + str(target_attack)).ApplyDamageOnPlayer(damage)
+	var damage = ServerData.enemy_data[type[0]]["Damage"]
+	var target_node = get_node_or_null("/root/GameServer/" + str(target_attack))
+	
+	if target_node != null:
+		target_node.ApplyDamageOnPlayer(damage)
+	else:
+		print("El objetivo no está disponible para el ataque.")
+	
 	await get_tree().create_timer(1.5).timeout
 	state = "Chase"  # Después de atacar, volver a Chase
 	is_attaking = false
-
-
 
 
 
@@ -143,7 +147,7 @@ func move_towards_target(delta):
 
 #	DefineEnemyState()
 func DefineEnemyState():
-	var  enemy_list = get_node("/root/GameServer/CiudadPrincipalHandler/").enemy_list[str(get_name())]
+	var  enemy_list = get_node("/root/GameServer/" + map  + "Handler/").enemy_list[str(get_name())]
 	enemy_state = {
 		"T": type[0],
 		"G": enemy_list["G"],
@@ -153,14 +157,15 @@ func DefineEnemyState():
 		"mH": enemy_list["mH"], 
 		"S": state, 
 		"TO": 1, 
-		"A": animation_vector  
+		"A": animation_vector ,
+		"M": map
 		}
-	get_node("/root/GameServer/CiudadPrincipalHandler/").ReceiveEnemyState(enemy_state,name)
+	get_node("/root/GameServer/" + map  + "Handler/").ReceiveEnemyState(enemy_state,name)
 
 
 func ApplyDamageOnSelf(attack):
-	var ciudad_principal_node = get_node("/root/GameServer/CiudadPrincipalHandler")
+	var map_node = get_node("/root/GameServer/"+ map + "Handler")
 	var node_name = get_name()
 	var _key = "health"
 	var damage = ServerData.skill_data[attack.skill_name].SkillDamage
-	ciudad_principal_node.EnemyHurt(str(node_name), damage,attack.player_id)
+	map_node.EnemyHurt(str(node_name), damage,attack.player_id)

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://gjiw7nn0fc6f"
-path="res://.godot/imported/globalv2.png-42beafceeea3b95554c00d2d517b1ef7.ctex"
+uid="uid://clvtk7dx21ep8"
+path="res://.godot/imported/autotilev2.png-b97fb05392ba7b100f55537cd1a48c9c.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Resources/Tilesets/globalv2.png"
-dest_files=["res://.godot/imported/globalv2.png-42beafceeea3b95554c00d2d517b1ef7.ctex"]
+source_file="res://Resources/Tilesets/autotilev2.png"
+dest_files=["res://.godot/imported/autotilev2.png-b97fb05392ba7b100f55537cd1a48c9c.ctex"]
 
 [params]
 

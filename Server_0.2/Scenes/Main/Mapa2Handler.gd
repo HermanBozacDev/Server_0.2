@@ -3,7 +3,7 @@ extends Node
 var enemy_id_counter = 0
 
 var enemy_types = ["SkullMan"] #,"Demon"list of enemies that  can spawn on the map
-var map = "CiudadPrincipal"
+var map = "Mapa2"
 
 
 #var open_locations =  [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14]
@@ -26,7 +26,7 @@ var map = "CiudadPrincipal"
 #	]
 #var enemy_maximum = 15
 var open_locations =  [0]
-var enemy_spawn_points = [Vector2(150,0)] 
+var enemy_spawn_points = [Vector2(0,0)] 
 var enemy_maximum = 1
 var occupied_locations = {}
 var enemy_list = {}
@@ -66,11 +66,11 @@ func SpawnEnemy():
 					"S": ServerData.enemy_data[type]["EnemyState"],
 					"TO": ServerData.enemy_data[type]["time_out"],
 					"A": ServerData.enemy_data[type]["A"],
-					"M": "CiudadPrincipal",
+					"M": "Mapa2",
 					"G": ServerData.enemy_data[type]["Gold"],
 				}
 		
-		get_parent().get_node("CiudadPrincipal").SpawnEnemy(enemy_id_counter, location)
+		get_parent().get_node("Mapa2").SpawnEnemy(enemy_id_counter, location)
 		enemy_id_counter += 1
 
 	# Eliminar enemigos muertos
@@ -94,6 +94,7 @@ func ReceiveEnemyState(enemy_state, enemy_id):
 func EnemyHurt(enemy_id, damage, player_id):
 	#get_node("/root/GameServer").SendEnemyHurt(enemy_id,map)
 	# Convertir enemy_id a string para asegurarse de que se accede correctamente
+	print("danio")
 	var enemy_key = str(enemy_id)
 	if enemy_list[enemy_key]["H"] <= 0:
 		pass
@@ -102,7 +103,7 @@ func EnemyHurt(enemy_id, damage, player_id):
 		if enemy_list[enemy_key]["H"] <= 0:
 			var loot_node = get_parent().get_node("LootProcessing")
 			var player_nickname = get_node("/root/GameServer/" + str(player_id)).player_nickname
-			var enemy_node = get_node("/root/GameServer/CiudadPrincipal/MapElements/Enemies/" + enemy_key)
+			var enemy_node = get_node("/root/GameServer/Mapa2/MapElements/Enemies/" + enemy_key)
 			var player_node = get_node("/root/GameServer/" + str(player_id))
 			player_node.SetExp(enemy_list,enemy_id)
 			loot_node.DetermineLootCount(enemy_list[enemy_id]["T"])
