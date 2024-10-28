@@ -59,6 +59,9 @@ d={
 2d_physics/layer_7="EnemyHitbox"
 2d_physics/layer_8="RangedSingleTargetSkill"
 2d_physics/layer_9="Teleport"
+2d_physics/layer_10="FisicAttack"
+2d_physics/layer_11="MeeleSingleTargetSkill"
+2d_physics/layer_12="TargetBuffDebuff"
 
 [rendering]
 

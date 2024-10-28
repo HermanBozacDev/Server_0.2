@@ -1,68 +1,14 @@
 {
   "SkullMan": {
-    "EXP": 10000,
-    "P": null,
+    "Damage": 10,
+    "PDef": 10,
+    "MDef": 10,
     "EnemyHealth": 100,
     "EnemyMaxHealth": 100,
+    "Exp": 65,
     "EnemyState": "Idle",
     "time_out": 5,
     "A": null,
-    "Gold" : 100,
-    "Damage": 5
-  },
-  "Mage": {            
-    "EXP": 50,
     "P": null,
-    "EnemyHealth": 30,
-    "EnemyMaxHealth": 30,
-    "EnemyState": "Idle",
-    "time_out": 1,
-    "A": null,
-    "Gold" : 550,
-    "Damage": 10
   },
-  "Demon": {
-    "EXP": 30,
-    "P": null,
-    "EnemyHealth": 15,
-    "EnemyMaxHealth": 15,
-    "EnemyState": "Idle",
-    "time_out": 5,
-    "A": null,
-    "Gold": 300,
-    "Damage": 4
-  },
-  "Butterfly": {
-    "EXP": 60,
-    "P": null,
-    "EnemyHealth": 30,
-    "EnemyMaxHealth": 30,
-    "EnemyState": "Idle",
-    "time_out": 5,
-    "A": null,
-    "Gold": 600,
-    "Damage": 9
-  },
-  "Gladiator": {
-    "EXP": 100,
-    "P": null,
-    "EnemyHealth": 50,
-    "EnemyMaxHealth": 50,
-    "EnemyState": "Idle",
-    "time_out": 5,
-    "A": null,
-    "Gold": 1000,
-    "Damage": 12
-  },
-  "EarthBird": {
-    "EXP": 25,
-    "P": null,
-    "EnemyHealth": 12,
-    "EnemyMaxHealth": 12,
-    "EnemyState": "Idle",
-    "time_out": 5,
-    "A": null,
-    "Gold": 200,
-    "Damage": 5
-  }
 }

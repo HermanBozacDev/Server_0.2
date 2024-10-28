@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=3 uid="uid://k8slym88ijty"]
+
+[ext_resource type="Script" path="res://Scenes/Skills/MeleeSingleTargetSkill.gd" id="1_r58in"]
+
+[sub_resource type="SegmentShape2D" id="SegmentShape2D_0aep0"]
+a = Vector2(16, 0)
+b = Vector2(0, 0)
+
+[node name="MeleeSingleTargetSkill" type="Area2D"]
+collision_layer = 1024
+collision_mask = 18
+script = ExtResource("1_r58in")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("SegmentShape2D_0aep0")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

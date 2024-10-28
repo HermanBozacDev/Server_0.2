@@ -1,9 +1,11 @@
-[gd_scene load_steps=3 format=4 uid="uid://bun4nh1lue3fo"]
+[gd_scene load_steps=4 format=4 uid="uid://bun4nh1lue3fo"]
 
 [ext_resource type="TileSet" uid="uid://ci74na3tn1eu5" path="res://Resources/Tilesets/Global.tres" id="1_7onaf"]
+[ext_resource type="Script" path="res://Scenes/Maps/Mapa2.gd" id="1_qs8w2"]
 [ext_resource type="PackedScene" uid="uid://bn3decqr0jkci" path="res://Scenes/Maps/Teleport.tscn" id="2_djijd"]
 
 [node name="Mapa2" type="Node2D" groups=["Map"]]
+script = ExtResource("1_qs8w2")
 
 [node name="Tiles" type="Node2D" parent="."]
 texture_filter = 1
@@ -65,5 +67,8 @@ spawn_point = Vector2(448, 24)
 
 [node name="CollisionShape2D" parent="MapElements/SupportElements/CiudadPrincipal" index="0"]
 rotation = 1.5708
+
+[node name="Marker2D" type="Marker2D" parent="."]
+position = Vector2(96, -328)
 
 [editable path="MapElements/SupportElements/CiudadPrincipal"]

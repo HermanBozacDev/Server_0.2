@@ -3,7 +3,6 @@ extends RigidBody2D
 var projectile_speed 
 var life_time = 1.5
 var skill_name
-var skill_damage
 var player_id
 var map
 var direction
@@ -12,7 +11,6 @@ var processing_body = false
 
 
 func _ready():
-	SetDamage()
 	apply_central_impulse(Vector2(projectile_speed, 0).rotated(rotation))
 	SelfDestruct()
 
@@ -20,8 +18,7 @@ func SelfDestruct():
 	await get_tree().create_timer(life_time).timeout
 	queue_free()
 
-func SetDamage():
-	skill_damage = ServerData.skill_data["WindStrike"].SkillDamage * (0.1 * get_node("/root/GameServer/"+ str(player_id)).player_stats["int"]) 
+
 
 
 func _on_hitbox_body_entered(body: Node2D) -> void:
@@ -32,8 +29,10 @@ func _on_hitbox_body_entered(body: Node2D) -> void:
 			"TileMapLayer":
 				return
 			"CharacterBody2D":
-				if body.has_method("ApplyDamageOnSelf"):
-					body.ApplyDamageOnSelf(self)
+				if body.has_method("EnemyHurtbox"):
+					body.EnemyHurtbox(self)
+				elif body.has_method("PlayerHurtbox"):
+					body.PlayerHurtbox(self)
 				else:
 					print("ME COMI UN HIT DE MIS PROPIAS BALAS MEPA")
 					return

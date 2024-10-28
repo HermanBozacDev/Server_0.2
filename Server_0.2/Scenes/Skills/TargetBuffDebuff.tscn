@@ -1,0 +1,18 @@
+[gd_scene load_steps=3 format=3 uid="uid://djb83e6min7a"]
+
+[ext_resource type="Script" path="res://Scenes/Skills/TargetBuffDebuff.gd" id="1_e7xse"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_0vsku"]
+radius = 8.0
+
+[node name="TargetBuffDebuff" type="Node2D"]
+script = ExtResource("1_e7xse")
+
+[node name="TargetArea" type="Area2D" parent="."]
+collision_layer = 2048
+collision_mask = 18
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="TargetArea"]
+shape = SubResource("CircleShape2D_0vsku")
+
+[connection signal="body_entered" from="TargetArea" to="." method="_on_target_area_body_entered"]

@@ -3,7 +3,7 @@ extends Node
 
 var multiplayer_api: MultiplayerAPI
 var peer: ENetMultiplayerPeer = ENetMultiplayerPeer.new()
-var ip: String = "147.79.107.178" 
+var ip: String = "127.0.0.1" 
 var port: int = 1912  
 var gameserver
 

@@ -56,17 +56,12 @@ func _physics_process(delta):
 			else:
 				pass
 	DefineEnemyState()
-# Función que busca al jugador y cambia al estado Chase si lo detecta
 func seek_player():
 	if playerDetectionZone.can_see_player():  # Si el área de detección ve al jugador
 		state = "Chase"  # Cambia el estado a 'Chase'
 	else:
 		if state == "Chase":  # Si ya no ve al jugador y estaba persiguiendo
 			state = "Wander"  # Cambia de nuevo a 'Wander'
-
-
-
-# Función principal de Chase
 func Chase(delta):
 	if playerDetectionZone.can_see_player() and playerDetectionZone.player != null:
 		var player_pos = playerDetectionZone.player.global_position  # Obtén la posición del jugador
@@ -78,9 +73,6 @@ func Chase(delta):
 		# Si no puede ver al jugador, debería hacer otra cosa (volver a patrullar o quedarse quieto)
 		
 		state = "Wander"  # O cualquier otro estado que haga sentido
-
-
-# Función de movimiento hacia el jugador
 func ChaseMove(direction, delta):
 	velocity = direction * chase_speed * delta
 	
@@ -100,8 +92,6 @@ func ChaseMove(direction, delta):
 
 	# Actualiza el vector de animación basado en la velocidad
 	animation_vector = velocity
-
-# Función de ataque
 func Attack():
 	is_attaking = true
 	print("attak")
@@ -116,11 +106,6 @@ func Attack():
 	await get_tree().create_timer(1.5).timeout
 	state = "Chase"  # Después de atacar, volver a Chase
 	is_attaking = false
-
-
-
-
-# Función para mover el enemigo hacia una posición objetivo durante el Wander
 func move_towards_target(delta):
 	var direction = global_position.direction_to(wanderController.target_position)
 	velocity = direction * speed * delta
@@ -138,23 +123,14 @@ func move_towards_target(delta):
 	
 	# Actualiza el vector de animación basado en la velocidad
 	animation_vector = velocity
-
-
-
-
-
-
-
-#	DefineEnemyState()
 func DefineEnemyState():
 	var  enemy_list = get_node("/root/GameServer/" + map  + "Handler/").enemy_list[str(get_name())]
 	enemy_state = {
 		"T": type[0],
-		"G": enemy_list["G"],
-		"EXP":enemy_list["EXP"], 
+		"Exp":enemy_list["Exp"], 
 		"P": position, 
-		"H": enemy_list["H"], 
-		"mH": enemy_list["mH"], 
+		"Health": enemy_list["Health"], 
+		"MHealth": enemy_list["MHealth"], 
 		"S": state, 
 		"TO": 1, 
 		"A": animation_vector ,
@@ -162,10 +138,15 @@ func DefineEnemyState():
 		}
 	get_node("/root/GameServer/" + map  + "Handler/").ReceiveEnemyState(enemy_state,name)
 
+"""METODOS QUE SE USAN AL COLISIONAR LOS SKILLS CON EL CUERPO ENEMIGO"""
 
-func ApplyDamageOnSelf(attack):
+func EnemyHurtbox(skill):
 	var map_node = get_node("/root/GameServer/"+ map + "Handler")
-	var node_name = get_name()
-	var _key = "health"
-	var damage = ServerData.skill_data[attack.skill_name].SkillDamage
-	map_node.EnemyHurt(str(node_name), damage,attack.player_id)
+	var value =  [skill,str(get_name()),skill.player_id,type[0]]
+	map_node.EnemyHurt(value)
+
+func EnemyBuffDebuff(skill):
+	print("SI")
+	var map_node = get_node("/root/GameServer/"+ map + "Handler")
+	var value =  [skill,str(get_name()),skill.player_id,type[0]]
+	map_node.EnemyBuffDebuff(value)

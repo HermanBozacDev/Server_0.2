@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://jn66l3ncfy7h"]
+[gd_scene load_steps=11 format=3 uid="uid://jn66l3ncfy7h"]
 
 [ext_resource type="Script" path="res://Scenes/Main/GameServer.gd" id="1_8p4xf"]
 [ext_resource type="Script" path="res://Scenes/Main/PlayerVerification.gd" id="2_jag3l"]
@@ -8,7 +8,6 @@
 [ext_resource type="Script" path="res://Scenes/Main/DamageProcessing.gd" id="5_r2ty0"]
 [ext_resource type="Script" path="res://Scenes/Main/Mapa2Handler.gd" id="6_l7tct"]
 [ext_resource type="PackedScene" uid="uid://dy48xkoyv3aow" path="res://Scenes/Maps/ServerCiudadPrincipal.tscn" id="6_lvwo1"]
-[ext_resource type="Script" path="res://Scenes/Main/StatsCalculated.gd" id="6_ng6qs"]
 [ext_resource type="PackedScene" uid="uid://bun4nh1lue3fo" path="res://Scenes/Maps/ServerMapa2.tscn" id="8_1aqku"]
 [ext_resource type="Script" path="res://Scenes/Npcs/CameraMen.gd" id="10_jsms6"]
 
@@ -26,9 +25,6 @@ script = ExtResource("4_cdbp5")
 
 [node name="DamageProcessing" type="Node" parent="."]
 script = ExtResource("5_r2ty0")
-
-[node name="StatsCalculated" type="Node" parent="."]
-script = ExtResource("6_ng6qs")
 
 [node name="CiudadPrincipalHandler" type="Node" parent="."]
 script = ExtResource("5_418n1")

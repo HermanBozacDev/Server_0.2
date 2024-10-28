@@ -98,7 +98,7 @@ func _on_peer_connected(player_id):
 		"LoadPlayer":
 			#value =nickname
 			#CREAR EL CONTAINER
-			var clase = ServerData.player_data[value]["clase"]
+			var clase = ServerData.player_data[value]["Class"]
 			player_verification_process.CreatePlayerContainer(player_id, value, clase)
 			#CARGAR LOS DATOS DEL JUGADOR AL CONTAINER
 			get_node("/root/GameServer/" + str(player_id)).SetStats(value)
@@ -129,12 +129,9 @@ func _on_peer_connected(player_id):
 			ServerData.hot_bar_data[nickname] = value
 			ServerData.SaveHotBar()
 		"PlayerAttack":
-			#value = [_position, animation_vector, spawn_time, a_rotation, a_position, a_direction, map, attack_name, attack_type]
-			get_node(str(value[6])).SpawnAttack(value[2], value[3], value[4], value[5], player_id, value[6], value[7], value[8])
-			key = "SpawnAttack"
-			var new_value = [value[0],value[1],value[2],value[3],value[6],player_id]
-			ServerSendDataToAllClients(key,new_value)
-			#rpc_id(0, "ReceiveAttack", a_position, animation_vector, spawn_time, a_rotation , map,player_id)
+			get_node("/root/GameServer/" + str(player_id)).HandleSkill(value, player_id)
+			
+
 
 
 
@@ -201,19 +198,28 @@ func CompletePlayerState(player_id, current_state,client_stat):
 	var player_data_from_db = ServerData.player_data[player_node.player_nickname]
 	
 	# Completar el estado del jugador con los datos que faltan
-	current_state["L"] = player_data_from_db["level"]
-	current_state["H"] = player_data_from_db["health"]
-	current_state["mH"] = player_data_from_db["maxhealth"]
-	current_state["Ma"] = player_data_from_db["mana"]
-	current_state["mMa"] = player_data_from_db["maxmana"]
-	current_state["EXP"] = player_data_from_db["exp"]
-	current_state["EXPFT"] = player_data_from_db["expFaltante"]
-	current_state["EXPRQ"] = player_data_from_db["expRequerida"]
+	current_state["Level"] = player_data_from_db["Level"]
+	current_state["Health"] = player_data_from_db["Health"]
+	current_state["MHealth"] = player_data_from_db["MHealth"]
+	current_state["Mana"] = player_data_from_db["Mana"]
+	current_state["MMana"] = player_data_from_db["MMana"]
+	current_state["Exp"] = player_data_from_db["Exp"]
+	current_state["ExpF"] = player_data_from_db["ExpF"]
+	current_state["ExpR"] = player_data_from_db["ExpR"]
 	current_state["M"] = player_data_from_db["M"]
 	current_state["Px"] = client_stat["Px"]
 	current_state["Py"] = client_stat["Py"]
 	current_state["A"] = client_stat["A"]
 	current_state["T"] = client_stat["T"]
+	current_state["PAtk"] = player_data_from_db["PAtk"]
+	current_state["MAtk"] = player_data_from_db["MAtk"]
+	current_state["PDef"] = player_data_from_db["PDef"]
+	current_state["MDef"] = player_data_from_db["MDef"]
+	current_state["Crit"] = player_data_from_db["Crit"]
+	current_state["MCrit"] = player_data_from_db["MCrit"]
+	current_state["Speed"] = player_data_from_db["Speed"]
+	current_state["CSpeed"] = player_data_from_db["CSpeed"]
+	current_state["ASpeed"] = player_data_from_db["ASpeed"]
 	return current_state
 
 
@@ -224,17 +230,26 @@ func CompleteFirstPlayerState(player_id, value):
 	var player_data_from_db = ServerData.player_data[player_node.player_nickname]
 	
 	# Completar el estado del jugador con los datos que faltan
-	value["L"] = player_data_from_db["level"]
-	value["H"] = player_data_from_db["health"]
-	value["mH"] = player_data_from_db["maxhealth"]
-	value["Ma"] = player_data_from_db["mana"]
-	value["mMa"] = player_data_from_db["maxmana"]
+	value["Level"] = player_data_from_db["Level"]
+	value["Health"] = player_data_from_db["Health"]
+	value["MHealth"] = player_data_from_db["MHealth"]
+	value["Mana"] = player_data_from_db["Mana"]
+	value["MMana"] = player_data_from_db["MMana"]
 	value["M"] = player_data_from_db["M"]
-	value["EXP"] = player_data_from_db["exp"]
-	value["EXPFT"] = player_data_from_db["expFaltante"]
-	value["EXPRQ"] = player_data_from_db["expRequerida"]
+	value["Exp"] = player_data_from_db["Exp"]
+	value["ExpF"] = player_data_from_db["ExpF"]
+	value["ExpR"] = player_data_from_db["ExpR"]
 	value["Px"] = value["Px"]
 	value["Py"] = value["Py"]
 	value["A"] = value["A"]
 	value["T"] = value["T"]
+	value["PAtk"] = player_data_from_db["PAtk"]
+	value["MAtk"] = player_data_from_db["MAtk"]
+	value["PDef"] = player_data_from_db["PDef"]
+	value["MDef"] = player_data_from_db["MDef"]
+	value["Crit"] = player_data_from_db["Crit"]
+	value["MCrit"] = player_data_from_db["MCrit"]
+	value["Speed"] = player_data_from_db["Speed"]
+	value["CSpeed"] = player_data_from_db["CSpeed"]
+	value["ASpeed"] = player_data_from_db["ASpeed"]
 	return value
