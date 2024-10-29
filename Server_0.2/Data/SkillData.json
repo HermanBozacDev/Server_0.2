@@ -83,7 +83,7 @@
 		"SkillActivePasive": "a",
 		"SkillColdown": 4,
 		"SkillExpantionTime": "N/A",
-		"BuffDebuffKey": "ManaR",
+		"BuffDebuffKey": "Health",
 		"BuffDebuffMultiplier": 1.05,
 		"BuffDebuffTime": 300
   },

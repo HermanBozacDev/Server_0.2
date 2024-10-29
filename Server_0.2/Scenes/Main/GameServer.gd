@@ -128,6 +128,10 @@ func _on_peer_connected(player_id):
 			var nickname = get_node("/root/GameServer/" + str(player_id)).player_nickname
 			ServerData.hot_bar_data[nickname] = value
 			ServerData.SaveHotBar()
+		"EquipItems":
+			var nickname = get_node("/root/GameServer/" + str(player_id)).player_nickname
+			ServerData.equip_item_data[nickname] = value
+			ServerData.SaveEquipItem()
 		"PlayerAttack":
 			get_node("/root/GameServer/" + str(player_id)).HandleSkill(value, player_id)
 			

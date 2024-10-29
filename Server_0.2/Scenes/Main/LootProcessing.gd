@@ -1,5 +1,11 @@
 extends Node
 
+
+#NECESITA UNA BUENA REFACTORIZADA ESTO PARA SER MAS ENTENDIBLE 
+#TODAVIA Y COMPATIBLE CON LA ARQUITECTURA QUE USO PERO POR AHORA FUNCIONAR FUNCIONA
+
+
+
 # Diccionario que guarda los ítems del loot_selector
 var loot_count
 var loot_dic = {}
@@ -29,11 +35,17 @@ func LootSelector(enemy_name, player_nickname, player_id, map):
 				if ServerData.item_data[nombre_item_actual].ItemCount == "true":
 					@warning_ignore("narrowing_conversion")
 					loot.append(int(randi_range(float(ServerData.loot_data[enemy_name]["Item" + str(counter) + "MinQ"]), float(ServerData.loot_data[enemy_name]["Item" + str(counter) + "MaxQ"]))))
+				#EN ESTA VARIABLE LOOT PUEDO MODIFICAR AHI SI CADA ITEM EN PARTICULAR
+				var loot_type = ServerData.item_data[loot[0]]["ItemType"]
+				loot.append(loot_type)
 				loot_dic[loot_dic.size() + 1] = loot
+				
+				
 				break
 			else:
 				loot_selector -= ServerData.loot_data[enemy_name]["Item" + str(counter) + "Chance"]
 				counter += 1
+				
 	_on_LootButton_pressed(player_nickname, loot_dic, player_id, map)
 
 # Acción al presionar el botón de loot
@@ -48,9 +60,9 @@ func _on_LootButton_pressed(nickname, my_loot_dic, _player_id, _map):
 				repetido = "si"
 		if repetido == "si":
 			if ServerData.item_data[my_loot_dic[key_loot][0]].ItemCount == "true":
-				pass
-				#ServerData.inventary_data[nickname][my_key_inven][1] += my_loot_dic[key_loot][1]
-				#my_loot_dic.erase(key_loot)
+				
+				ServerData.inventary_data[nickname][my_key_inven][1] += my_loot_dic[key_loot][1]
+				my_loot_dic.erase(key_loot)
 			else:
 				if !checkslot(nickname):
 					print("sin lugar en el inventario")
@@ -62,6 +74,7 @@ func _on_LootButton_pressed(nickname, my_loot_dic, _player_id, _map):
 			repetido = "no"
 		else:
 			var slot_libre = checkslot(nickname)
+			print("AAVER ESTO",loot_dic[key_loot])
 			ServerData.inventary_data[nickname][str(slot_libre)] = loot_dic[key_loot]
 			loot_dic.erase(key_loot)
 			
