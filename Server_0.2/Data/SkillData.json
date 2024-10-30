@@ -155,7 +155,7 @@
 		"SkillName": "FocusMind",
 		"SkillType": "MeleeSingleTargetSkill",
 		"SkillDamage": "N/A",
-		"SkillPower": 10,
+		"SkillPower": 50,
 		"ProjectileSpeed": 300,
 		"SkillRadius": "N/A",
 		"DamageDelayTime": "N/A",
@@ -424,8 +424,8 @@
 		"SkillColdown": 4,
 		"SkillExpantionTime": "N/A"
   },
-  "MoreAccurate": {
-		"SkillName": "MoreAccurate",
+  "MoreAttackSpeed": {
+		"SkillName": "MoreAttackSpeed",
 		"SkillType": "RangedSingleTargetSkill",
 		"SkillDamage": "N/A",
 		"SkillPower": 10,

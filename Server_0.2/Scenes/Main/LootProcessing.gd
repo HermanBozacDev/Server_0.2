@@ -60,9 +60,10 @@ func _on_LootButton_pressed(nickname, my_loot_dic, _player_id, _map):
 				repetido = "si"
 		if repetido == "si":
 			if ServerData.item_data[my_loot_dic[key_loot][0]].ItemCount == "true":
+				print("apsan cosas con los items aca")
 				
-				ServerData.inventary_data[nickname][my_key_inven][1] += my_loot_dic[key_loot][1]
-				my_loot_dic.erase(key_loot)
+				#ServerData.inventary_data[nickname][my_key_inven][1] += my_loot_dic[key_loot][1]
+				#my_loot_dic.erase(key_loot)
 			else:
 				if !checkslot(nickname):
 					print("sin lugar en el inventario")

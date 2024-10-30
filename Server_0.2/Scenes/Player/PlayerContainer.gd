@@ -71,7 +71,8 @@ func LevelUp():
 	if sobra_experiencia > 0:
 		SetExpSobrante(sobra_experiencia)
 func CheckForNewSkills():
-	print("LLEGO AL CHEKIN")
+	print("POR ALGUN MOTIVO NO SIEMPRE APRENDO SKILLS ")
+	
 	match ServerData.player_data[player_nickname]["Level"]:
 		5:
 			if ServerData.player_data[player_nickname]["Type"] ==  "fighter":
@@ -120,7 +121,7 @@ func CheckForNewSkills():
 				LearningSkill("BattleCry")
 				LearningSkill("HearthPunch")
 				LearningSkill("CriticalVision")
-				LearningSkill("MoreAccurate")
+				LearningSkill("MoreAttackSpeed")
 				var key = "UpdateSkills"
 				var new_value = ServerData.learn_skills_data[player_nickname]
 				get_node("/root/GameServer").ServerSendDataToOneClient(player_rpc_id,key,new_value)
