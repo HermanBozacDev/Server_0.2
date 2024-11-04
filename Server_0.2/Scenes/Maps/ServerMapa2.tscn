@@ -60,15 +60,10 @@ tile_set = ExtResource("1_7onaf")
 [node name="SupportElements" type="Node2D" parent="MapElements"]
 
 [node name="CiudadPrincipal" parent="MapElements/SupportElements" instance=ExtResource("2_djijd")]
-position = Vector2(-776, 24)
+position = Vector2(-784, 16)
 destiny = "CiudadPrincipal"
 ubication = "Mapa2"
 spawn_point = Vector2(448, 24)
 
-[node name="CollisionShape2D" parent="MapElements/SupportElements/CiudadPrincipal" index="0"]
-rotation = 1.5708
-
 [node name="Marker2D" type="Marker2D" parent="."]
 position = Vector2(96, -328)
-
-[editable path="MapElements/SupportElements/CiudadPrincipal"]

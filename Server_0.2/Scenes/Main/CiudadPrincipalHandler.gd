@@ -10,5 +10,6 @@ var enemy_maximum = 0
 var occupied_locations = {}
 var enemy_list = {}
 
-func _ready():
-	pass
+
+"""COMO ES MAPA DE CIUDAD NO ESTOY MANEJANDO DAÑO POR AHORA ACA"""
+"""CUANDO ACTIVE LOS BUFFS AHI SI TENGO QUE AGREGAR ACA PARA PODER BUFFEAR ADENTRO DE LA CIUDAD"""

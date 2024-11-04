@@ -5,8 +5,9 @@ extends Area2D
 @export var spawn_point: Vector2
 
 
-
+"""TELEPORT"""
 func _on_body_entered(body: Node2D) -> void:
+	print("teleport")
 	var new_class = body.get_class()
 	match new_class:
 		"TileMapLayer":

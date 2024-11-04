@@ -16,25 +16,7 @@ var skill_data: Dictionary = {}
 var loot_data: Dictionary = {}
 var mod_stats_data: Dictionary = {} 
 
-
-func _ready() -> void:
-	print("Cargando datos del servidor")
-	# Carga de datos desde archivos
-	skill_data =     load_json("res://Data/SkillData.json")
-	class_data =     load_json("res://Data/ClaseBaseStats.json")
-	enemy_data =     load_json("res://Data/EnemyData.json")
-	loot_data =      load_json("res://Data/LootData.json")
-	item_data =      load_json("res://Data/ItemData.json")
-	mod_stats_data = load_json("res://Data/ModStatsData.json")
-
-	player_data =       load_json("user://PlayerData.json")
-	account_data =      load_json("user://AccountData.json")
-	inventary_data =    load_json("user://InventaryData.json")
-	hot_bar_data =      load_json("user://HotBarData.json")
-	equip_item_data =   load_json("user://EquipItemData.json")
-	learn_skills_data = load_json("user://LearnSkillData.json")
-
-# Función para cargar JSON desde un archivo
+"""FUNCIONES AUXILIARES"""
 func load_json(file_path: String) -> Dictionary:
 	if FileAccess.file_exists(file_path):
 		var file = FileAccess.open(file_path, FileAccess.READ)
@@ -42,7 +24,7 @@ func load_json(file_path: String) -> Dictionary:
 		file.close()
 
 		if file_content.strip_edges() == "":
-			print("Archivo JSON vacío:", file_path)
+			#json vacio
 			return {}
 
 		var json_parser = JSON.new()
@@ -51,45 +33,43 @@ func load_json(file_path: String) -> Dictionary:
 		if parse_result == OK:
 			return json_parser.get_data()
 		else:
-			print("Error al parsear el archivo JSON:", json_parser.get_error_message())
+			#error parseando archivo
+			pass
 	else:
-		print("Archivo no encontrado:", file_path)
+		#archivo no encontrado
+		pass
 	return {}
-
-# Funciones para guardar datos
 func save_json(file_path: String, data: Dictionary) -> void:
 	var file = FileAccess.open(file_path, FileAccess.WRITE)
 	file.store_string(JSON.stringify(data))
 	file.close()
+func CheckNickOpen(nickname):
+	if player_data.has(nickname):
+		return false
+	else:
+		return true
 
-# Funciones para guardar cada tipo de datos
-func SavePlayers() -> void:
-	save_json("user://PlayerData.json", player_data)
+"""INICIAR LOS DATOS DEL SERVIDOR"""
+func _ready() -> void:
+	skill_data =     load_json("res://Data/SkillData.json")
+	class_data =     load_json("res://Data/ClaseBaseStats.json")
+	enemy_data =     load_json("res://Data/EnemyData.json")
+	loot_data =      load_json("res://Data/LootData.json")
+	item_data =      load_json("res://Data/ItemData.json")
+	mod_stats_data = load_json("res://Data/ModStatsData.json")
+	player_data =       load_json("user://PlayerData.json")
+	account_data =      load_json("user://AccountData.json")
+	inventary_data =    load_json("user://InventaryData.json")
+	hot_bar_data =      load_json("user://HotBarData.json")
+	equip_item_data =   load_json("user://EquipItemData.json")
+	learn_skills_data = load_json("user://LearnSkillData.json")
 
-func SaveAccounts() -> void:
-	print("Registrando un nuevo personaje en una cuenta")
-	save_json("user://AccountData.json", account_data)
-
-func SaveInventory() -> void:
-	save_json("user://InventaryData.json", inventary_data)
-
-func SaveHotBar() -> void:
-	save_json("user://HotBarData.json", hot_bar_data)
-
-func SaveEquipItem() -> void:
-	save_json("user://EquipItemData.json", equip_item_data)
-
-func SaveLearnSkill() -> void:
-	save_json("user://LearnSkillData.json", learn_skills_data)
-
-
-
-# Función para crear un nuevo jugador
+"""NUEVAS BASES DE DATOS"""
 func CreateNewPlayerDatabase(value):
 	if player_data.has(value[1]):
-		print("El nombre ya existe")
+		#aca tengo que mandar una señal de que el nombre esta ocupado
+		return
 	else:
-		print("Creando un nuevo jugador")
 		var stats = class_data[value[2]]
 		player_data[value[1]] = {
 			"HealthR": stats["HealthR"],
@@ -122,7 +102,7 @@ func CreateNewPlayerDatabase(value):
 			"CSpeed": stats["CSpeed"],
 			"ASpeed": stats["ASpeed"]
 		}
-		inventary_data[value[1]] = {}
+		inventary_data[value[1]] = {"1":["Bone_Boots","Armor"],"2":["Bone_Hat","Armor"],"3":["Bone_Armor","Armor"],"4":["Bone_Gloves","Armor"],"5":["Bone_Sword","Weapons"],"6":["Dark_Wings","Wings"]}
 		hot_bar_data[value[1]] = {}
 		equip_item_data[value[1]] = {}
 		var type = value[3]
@@ -174,10 +154,6 @@ func CreateNewPlayerDatabase(value):
 		SaveHotBar()
 		SaveEquipItem()
 		SaveLearnSkill()
-
-
-
-
 func CreatePlayerSave(value):
 	#value=username,nickname,new_class,new_type
 	# Verifica si ya hay una entrada para el usuario
@@ -193,46 +169,30 @@ func CreatePlayerSave(value):
 		account_data[str(value[0])] = player_save
 		SaveAccounts()
 
-
-
-
-
-
-
-# Función para buscar personajes de un usuario y devolver el pool de personajes
+"""BUSCAR LOS PERSONAJES DE UNA CUENTA"""
 func PlayerPoolSearch(player_id, username):
-	
-	# Crear un diccionario vacío para almacenar el pool de personajes
 	var player_pool: Dictionary = {}
-
-	# Verificar si el usuario existe en los datos de cuenta
 	if account_data.has(username):
-		# Obtener los personajes del usuario como diccionario
 		var user_characters = account_data[username] as Dictionary  
-		# Inicializar el pool de personajes del usuario en player_pool
 		player_pool[username] = {}
-		# Iterar sobre los personajes del usuario
 		for nickname in user_characters.keys():
-			print("player:", nickname)
-			# Agregar el personaje al pool del usuario
 			player_pool[username][nickname] = user_characters[nickname]  
 	else:
-		print("Usuario no encontrado:", username)
-	# Enviar la respuesta al servidor con el pool de personajes
+		return
 	var key = "PlayerPool"
-	get_node("/root/GameServer").ServerSendDataToOneClient(player_id, key, player_pool)
+	var value = [player_pool,username]
+	get_node("/root/GameServer").ServerSendDataToOneClient(player_id, key, value)
 
-
-
-
-
-
-
-
-func CheckNickOpen(nickname):
-	if player_data.has(nickname):
-		print("El nombre ya existe")
-		return false
-	else:
-		print("disponible")
-		return true
+"""ACTUALIZACION DE DICCIONARIOS """
+func SavePlayers() -> void:
+	save_json("user://PlayerData.json", player_data)
+func SaveAccounts() -> void:
+	save_json("user://AccountData.json", account_data)
+func SaveInventory() -> void:
+	save_json("user://InventaryData.json", inventary_data)
+func SaveHotBar() -> void:
+	save_json("user://HotBarData.json", hot_bar_data)
+func SaveEquipItem() -> void:
+	save_json("user://EquipItemData.json", equip_item_data)
+func SaveLearnSkill() -> void:
+	save_json("user://LearnSkillData.json", learn_skills_data)

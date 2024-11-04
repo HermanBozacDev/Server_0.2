@@ -1,37 +1,33 @@
-
-
-
-
 extends CharacterBody2D
 
 var speed = 15
 var chase_speed = 15
-var state = "Idle"
-var animation_vector = Vector2()
-var target_reached = false
-var state_ready = true
 var attack_distance = 8  # Distancia mínima para atacar
 var wander_target_range = 128  # Rango de vagar aleatorio
+var wander_timer_duration = 5
+
+var state = "Idle"
+var type = ["SkullMan"]
+var animation_vector = Vector2()
+
+var is_attaking = false
+var target_reached = false
+var state_ready = true
+
+var map
 var player
 var target_attack
-var is_attaking = false
+var enemy_state
+
 @onready var playerDetectionZone = $PlayerDetectionZone
 @onready var wanderController = $WanderController
 
-
-var enemy_state
-
-var type = ["SkullMan"]
-var map
-
-var wander_timer_duration = 5
-
-
+"""INICIAR LA VARIABLE PLAYER CON EL PLAYER DETECTION"""
 func _ready():
 	player = playerDetectionZone.player
 
+"""STATE MACHINE"""
 func _physics_process(delta):
-	
 	match state:
 		"Idle":
 			if state_ready:
@@ -94,14 +90,14 @@ func ChaseMove(direction, delta):
 	animation_vector = velocity
 func Attack():
 	is_attaking = true
-	print("attak")
 	var damage = ServerData.enemy_data[type[0]]["Damage"]
 	var target_node = get_node_or_null("/root/GameServer/" + str(target_attack))
 	
 	if target_node != null:
 		target_node.ApplyDamageOnPlayer(damage)
 	else:
-		print("El objetivo no está disponible para el ataque.")
+		#no hay objetivo disppnible
+		pass
 	
 	await get_tree().create_timer(1.5).timeout
 	state = "Chase"  # Después de atacar, volver a Chase
@@ -119,10 +115,12 @@ func move_towards_target(delta):
 		if collision.get_collider() != playerDetectionZone.player:
 			wanderController.update_target_position()
 		else:
-			print("Chocaste con el jugador, no cambies de objetivo.")
+			pass
 	
 	# Actualiza el vector de animación basado en la velocidad
 	animation_vector = velocity
+
+"""DEFINIR ESTADO GLOBAL"""
 func DefineEnemyState():
 	var  enemy_list = get_node("/root/GameServer/" + map  + "Handler/").enemy_list[str(get_name())]
 	enemy_state = {
@@ -138,15 +136,14 @@ func DefineEnemyState():
 		}
 	get_node("/root/GameServer/" + map  + "Handler/").ReceiveEnemyState(enemy_state,name)
 
-"""METODOS QUE SE USAN AL COLISIONAR LOS SKILLS CON EL CUERPO ENEMIGO"""
-
+"""ENEMIGO TOMANDO DAÑO DE PLAYERS"""
 func EnemyHurtbox(skill):
 	var map_node = get_node("/root/GameServer/"+ map + "Handler")
 	var value =  [skill,str(get_name()),skill.player_id,type[0]]
 	map_node.EnemyHurt(value)
 
+"""ENEMY TOMANDO BUFF/DEBUFF"""
 func EnemyBuffDebuff(skill):
-	print("SI")
 	var map_node = get_node("/root/GameServer/"+ map + "Handler")
 	var value =  [skill,str(get_name()),skill.player_id,type[0]]
 	map_node.EnemyBuffDebuff(value)

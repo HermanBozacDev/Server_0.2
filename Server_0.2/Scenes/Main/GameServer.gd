@@ -10,10 +10,8 @@ var latency_array = []
 var latency = 0
 
 """FUNCIONES DE CONFIGURACION PRINCIPALES"""
-
 func _ready():
 	start_game_server(1909, 100)
-
 func start_game_server(port: int, max_players: int):
 	game_server = ENetMultiplayerPeer.new()
 	var result = game_server.create_server(port, max_players)
@@ -26,7 +24,6 @@ func start_game_server(port: int, max_players: int):
 	print("EL GAMESERVER ESTA CORRIENDO EN EL PUERTO ", port)
 	multiplayer_api.peer_connected.connect(_on_peer_connected)
 	multiplayer_api.peer_disconnected.connect(_on_peer_disconnected)
-
 func _on_peer_disconnected(player_id):
 	print("User " + str(player_id) + " Disconnected")
 	if get_node(str(player_id)) == null:
@@ -41,25 +38,17 @@ func _on_peer_disconnected(player_id):
 		get_node("/root/GameServer/StateProcessing").world_state.erase(str(player_id))
 		var key = "DespawnPlayer"
 		ServerSendDataToAllClients(key,player_id)
-
 func _on_peer_connected(player_id):
 	print("NUEVO USUARIO CONECTADO:", player_id)
 	player_verification_process.Start(player_id)
 
-
-
+"""HANDLE CLIENT DATA """
 @rpc("any_peer") func ClientSendDataToServer(key, value):
-	#print("KEY",key)
 	var player_id = multiplayer_api.get_remote_sender_id()
-	
 	match key:
 		"PlayerState":
-			#value = player_State
-			#print("AVER ",player_state_collection,value)
-			# Si el jugador ya tiene un estado en player_state_collection
 			if player_state_collection.has(str(player_id)):
-				UpdateExistPlayerState(player_id,value,)
-
+				UpdateExistPlayerState(player_id,value)
 			else:
 				UpdatenNewPlayerState(player_id, value)
 		"FetchServerTime":
@@ -69,17 +58,23 @@ func _on_peer_connected(player_id):
 			ServerSendDataToOneClient(player_id,key,value)
 		"FetchToken":
 			player_verification_process.Verify(player_id,value)
+		"PlayerPool":
+			#value = username
+			ServerData.PlayerPoolSearch(player_id, value)
 		"NewPlayerRegister":
 			#value = [username,nickname,new_class,new_type]
 			if !ServerData.CheckNickOpen(value[1]):
-				print("no disponible")
+				#nombre no disponible
+				return
 			else:
 				#CREAR BASES DE DATOS
 				ServerData.CreateNewPlayerDatabase(value)
 				ServerData.CreatePlayerSave(value)
 				
 				#CREAR EL CONTAINER
-				player_verification_process.CreatePlayerContainer(player_id, value[1], value[2])
+				var new_value = [value[1],value[0]]
+				#new_value = [nickname, username]
+				player_verification_process.CreatePlayerContainer(player_id, new_value, value[2])
 				
 				#SPAWNEAR EN EL MAPA CORRECTO EN EL SERVER
 				var stats = get_node("/root/GameServer/" + str(player_id)).player_stats
@@ -87,37 +82,33 @@ func _on_peer_connected(player_id):
 				get_node("/root/GameServer/" + str(map)).SpawnPlayer(player_id, value[1],Vector2(0,0))
 				#ENVIAR LA INFORMACION FINAL AL CLIENTE
 					#value = [stats[0],inventory[1],hotbar[2],equipitem[3],learnskill[4],nickname[5],map[6]
-				var inventory = {}
 				var hotbar = {}
 				var equipItems = {}
-				value = [stats,inventory,hotbar,equipItems,ServerData.learn_skills_data[value[1]],value[1]]
+				value = [stats,ServerData.inventary_data[value[1]],hotbar,equipItems,ServerData.learn_skills_data[value[1]],value[1]]
 				rpc_id(player_id, "ServerSendDataToOneClient", player_id,key,value)
-		"PlayerPool":
-			#value = username
-			ServerData.PlayerPoolSearch(player_id, value)
 		"LoadPlayer":
-			#value =nickname
+			#value = [slot_name,username]
 			#CREAR EL CONTAINER
-			var clase = ServerData.player_data[value]["Class"]
+			var clase = ServerData.player_data[value[0]]["Class"]
 			player_verification_process.CreatePlayerContainer(player_id, value, clase)
 			#CARGAR LOS DATOS DEL JUGADOR AL CONTAINER
-			get_node("/root/GameServer/" + str(player_id)).SetStats(value)
+			get_node("/root/GameServer/" + str(player_id)).SetStats(value[0])
 			#SPAWNEAR AL JUGADOR EN EL MAPA Y POSICION CORRECTAS EN EL SERVIDOR
 			var map = get_node("/root/GameServer/" + str(player_id)).player_stats["M"]
 			var load_position = Vector2(0,0)
 			load_position.x =get_node("/root/GameServer/" + str(player_id)).player_stats["Px"]
 			load_position.y = get_node("/root/GameServer/" + str(player_id)).player_stats["Py"]
-			get_node("/root/GameServer/" + str(map)).SpawnPlayer(player_id, value,load_position)
+			get_node("/root/GameServer/" + str(map)).SpawnPlayer(player_id, value[0],load_position)
 			
 			
 			#ENVIO LA INFORMACION COMPLETA AL CLIENTE
 			var new_player_stats =  [
-				ServerData.player_data[value],
-				ServerData.inventary_data[value],
-				ServerData.hot_bar_data[value],
-				ServerData.equip_item_data[value],
-				ServerData.learn_skills_data[value],
-				value
+				ServerData.player_data[value[0]],
+				ServerData.inventary_data[value[0]],
+				ServerData.hot_bar_data[value[0]],
+				ServerData.equip_item_data[value[0]],
+				ServerData.learn_skills_data[value[0]],
+				value[0]
 				]
 			rpc_id(player_id, "ServerSendDataToOneClient", player_id,key,new_player_stats)
 		"Inventory":
@@ -134,68 +125,27 @@ func _on_peer_connected(player_id):
 			ServerData.SaveEquipItem()
 		"PlayerAttack":
 			get_node("/root/GameServer/" + str(player_id)).HandleSkill(value, player_id)
-			
+		"Information":
+			match value[0]:
+				"Item":
+					var new_value = [ServerData.item_data[value[1]][value[2]]]
+					ServerSendDataToOneClient(player_id,value[3],new_value)
+				"Skill":
+					pass
 
-
-
-
-
+"""DATA A UN CLIENTE ESPECIFICO"""
 @rpc func ServerSendDataToOneClient(player_id,key,value):
 	rpc_id(player_id, "ServerSendDataToOneClient", player_id,key,value)
 
-
+"""DATA A TODOS LOS CLIENTES"""
 @rpc func ServerSendDataToAllClients(key,value):
 	rpc_id(0, "ServerSendDataToAllClients", key,value)
 
-
-
-
-
-
+"""WORLD STATE"""
 @rpc func ServerSendWorldState(world_state):
 	rpc_id(0, "ServerSendWorldState", world_state)
 
-
-
-
-
-func UpdateExistPlayerState(player_id,value,):
-	var current_state = player_state_collection[str(player_id)]
-	var updated_state = CompletePlayerState(player_id, current_state,value)
-	player_state_collection[str(player_id)] = updated_state
-	
-	var player_node = get_node_or_null("/root/GameServer/" + str(player_id))
-	if player_node:
-		player_node.UpdateServerDataKey("Px",updated_state["Px"])
-		player_node.UpdateServerDataKey("Py",updated_state["Py"])
-		#print("playermap",ServerData.player_data[playerNickname]["M"])
-		var position = player_node.GetPosition(player_node.player_nickname)
-		var map = updated_state["M"]
-		var other_player_node = get_node_or_null("/root/GameServer/" + str(map) + "/MapElements/OtherPlayers/" + str(player_id))
-		if other_player_node:
-			get_node("/root/GameServer/" + str(map)).MovePlayer(player_id, position)
-
-
-func UpdatenNewPlayerState(player_id, value):
-	var new_state = CompleteFirstPlayerState(player_id, value)
-	player_state_collection[str(player_id)] = new_state
-	
-	# Crear el nodo del jugador en el servidor si es necesario
-	var player_node = get_node_or_null("/root/GameServer/" + str(player_id))
-	if player_node:
-		player_node.UpdateServerDataKey("Px",new_state["Px"])
-		player_node.UpdateServerDataKey("Py",new_state["Py"])
-
-		var position = player_node.GetPosition(player_node.player_nickname)
-		var map = new_state["M"]
-		var other_player_node = get_node_or_null("/root/GameServer/" + str(map) + "/MapElements/OtherPlayers/" + str(player_id))
-		if other_player_node:
-			get_node("/root/GameServer/" + str(map)).MovePlayer(player_id, position)
-
-
-"""ACA COMPLETO"""
-
-# Función para completar los datos del jugador
+"""FUNCIONES AUXILIARES"""
 func CompletePlayerState(player_id, current_state,client_stat):
 	var player_node = get_node_or_null("/root/GameServer/" + str(player_id))
 	# Obtener los datos adicionales del jugador desde la base de datos
@@ -225,9 +175,6 @@ func CompletePlayerState(player_id, current_state,client_stat):
 	current_state["CSpeed"] = player_data_from_db["CSpeed"]
 	current_state["ASpeed"] = player_data_from_db["ASpeed"]
 	return current_state
-
-
-# Función para completar los datos del jugador
 func CompleteFirstPlayerState(player_id, value):
 	var player_node = get_node_or_null("/root/GameServer/" + str(player_id))
 	# Obtener los datos adicionales del jugador desde la base de datos
@@ -257,3 +204,32 @@ func CompleteFirstPlayerState(player_id, value):
 	value["CSpeed"] = player_data_from_db["CSpeed"]
 	value["ASpeed"] = player_data_from_db["ASpeed"]
 	return value
+func UpdateExistPlayerState(player_id,value,):
+	var current_state = player_state_collection[str(player_id)]
+	var updated_state = CompletePlayerState(player_id, current_state,value)
+	player_state_collection[str(player_id)] = updated_state
+	
+	var player_node = get_node_or_null("/root/GameServer/" + str(player_id))
+	if player_node:
+		player_node.UpdateServerDataKey("Px",updated_state["Px"])
+		player_node.UpdateServerDataKey("Py",updated_state["Py"])
+		var position = player_node.GetPosition(player_node.player_nickname)
+		var map = updated_state["M"]
+		var other_player_node = get_node_or_null("/root/GameServer/" + str(map) + "/MapElements/OtherPlayers/" + str(player_id))
+		if other_player_node:
+			get_node("/root/GameServer/" + str(map)).MovePlayer(player_id, position)
+func UpdatenNewPlayerState(player_id, value):
+	var new_state = CompleteFirstPlayerState(player_id, value)
+	player_state_collection[str(player_id)] = new_state
+	
+	# Crear el nodo del jugador en el servidor si es necesario
+	var player_node = get_node_or_null("/root/GameServer/" + str(player_id))
+	if player_node:
+		player_node.UpdateServerDataKey("Px",new_state["Px"])
+		player_node.UpdateServerDataKey("Py",new_state["Py"])
+
+		var position = player_node.GetPosition(player_node.player_nickname)
+		var map = new_state["M"]
+		var other_player_node = get_node_or_null("/root/GameServer/" + str(map) + "/MapElements/OtherPlayers/" + str(player_id))
+		if other_player_node:
+			get_node("/root/GameServer/" + str(map)).MovePlayer(player_id, position)

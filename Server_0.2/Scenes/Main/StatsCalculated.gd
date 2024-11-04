@@ -1,12 +1,6 @@
 extends Node
 
-
-#DEFINIR ESTADISTICAS
-
-# STRENGHT INTELIGENCE DEXTERITY VITALITY CONCENTRATION
-
-
-#ACA QUIERO CALCULAR LAS DEMAS ESTADISTICAS 
+"""SCRIPT DE MODIFICADORES"""
 var int_modifiers = {
 	1: 0.61,
 	2: 0.62,
@@ -58,9 +52,7 @@ var int_modifiers = {
 	48: 1.27,
 	49: 1.28,
 	50: 1.30
-}
-
-
+	}
 var str_modifiers = {
 	1: 0.61,
 	2: 0.62,
@@ -112,9 +104,7 @@ var str_modifiers = {
 	48: 1.27,
 	49: 1.28,
 	50: 1.50
-}
-
-
+	}
 var dex_modifiers = {
 	1: 0.61,
 	2: 0.62,
@@ -166,7 +156,7 @@ var dex_modifiers = {
 	48: 1.29,
 	49: 1.30,
 	50: 1.31
-}
+	}
 var con_modifiers = {
 	1: 0.61,
 	2: 0.62,
@@ -218,4 +208,4 @@ var con_modifiers = {
 	48: 1.90,
 	49: 1.95,
 	50: 2.00
-}
+	}

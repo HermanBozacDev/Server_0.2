@@ -63,8 +63,3 @@ position = Vector2(536, 0)
 destiny = "Mapa2"
 ubication = "CiudadPrincipal"
 spawn_point = Vector2(-720, 32)
-
-[node name="CollisionShape2D" parent="MapElements/SupportElements/Mapa2" index="0"]
-rotation = 1.5708
-
-[editable path="MapElements/SupportElements/Mapa2"]

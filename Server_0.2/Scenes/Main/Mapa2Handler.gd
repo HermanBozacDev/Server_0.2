@@ -2,9 +2,8 @@ extends Node
 
 var enemy_id_counter = 0
 
-var enemy_types = ["SkullMan"] #,"Demon"list of enemies that  can spawn on the map
+var enemy_types = ["SkullMan"] 
 var map = "Mapa2"
-
 var open_locations =  [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14]
 var enemy_spawn_points = [
 	Vector2(-640,-320),
@@ -22,26 +21,20 @@ var enemy_spawn_points = [
 	Vector2(432,-448),
 	Vector2(-120,-224),
 	Vector2(280,-120),
-	Vector2(96,-328),
-	]
+	Vector2(96,-328)]
 var enemy_maximum = 15
-#var open_locations =  [0]
-#var enemy_spawn_points = [Vector2(0,0)] 
-#var enemy_maximum = 1
 var occupied_locations = {}
 var enemy_list = {}
 
+"""INIT"""
 func _ready():
-	
-	
 	var timer  = Timer.new()
 	timer.wait_time = 1
 	timer.autostart = true
 	timer.timeout.connect(SpawnEnemy)
 	self.add_child(timer)
 
-
-
+"""MANEJO EL SPAWN DE ENEMIGOS CUANDO MATAN O CUANDO INICIA EL SERVER"""
 func SpawnEnemy():
 	if enemy_list.size() >= enemy_maximum:
 		pass
@@ -80,47 +73,39 @@ func SpawnEnemy():
 			else:
 				enemy_list[enemy]["TO"] -= 1
 
-
+"""GUARDO ESTADO DEL ENEMIGO EN LISTA DE ESTADOS DEL MAPA"""
 func ReceiveEnemyState(enemy_state, enemy_id):
 	enemy_list[str(enemy_id)] = enemy_state
 
-
-
+"""CALCULADOR DE DAÑO"""
 func CalculatingDamage(value):
 	var skill_type =  ServerData.skill_data[value[0].skill_name].SkillType
 	if skill_type == "FisicAttack":
 		#ACLARACION: ACA ESTOY USANDO GETPATK PLANO SIN METERLE LA INLFUENCIA DE LAS NUEVAS TABLAS DE STR DESPUES LO VEO ESO
-		var playerPAtk = get_node("/root/GameServer/" +str(value[0].player_id)).GetPAtk()
+		var find_value = "PAtk"
+		var playerPAtk = get_node("/root/GameServer/" +str(value[0].player_id)).GetValue(find_value)
 		var enemyPDef = ServerData.enemy_data[value[3]]["PDef"]
 		var final_damage = get_node("/root/GameServer/DamageProcessing").CalculateSimpleMeleeAttackDamage(playerPAtk, enemyPDef)
 		return final_damage
 	else:
-		print("aca entra cauqluier otro tipo de skill")
 		#capas que tengo que hacer una nueva caracteristica skill family o algo asi para ver si es mago o fighter
 		#ESTA SOLUCION NO SIRVE EN EL FUTURO CUANDO TENGA SUBCLASES
 		if get_node("/root/GameServer/" + str(value[2])).player_stats["Type"] == "fighter":
-			print("es un skill de guerrero")
-			var playerPAtk = get_node("/root/GameServer/" +str(value[0].player_id)).GetPAtk()
+			var find_value = "PAtk"
+			var playerPAtk = get_node("/root/GameServer/" +str(value[0].player_id)).GetValue(find_value)
 			var enemyPDef = ServerData.enemy_data[value[3]]["PDef"]
 			var skillPower = ServerData.skill_data[value[0].skill_name].SkillPower
 			var final_damage = get_node("/root/GameServer/DamageProcessing").CalculatedMagicSkillDamage(playerPAtk, skillPower,enemyPDef)
 			return final_damage
 		else:
-			print("es un skill de mago")
-			var playerMAtk = get_node("/root/GameServer/" +str(value[0].player_id)).GetMAtk()
+			var find_value = "MAtk"
+			var playerMAtk = get_node("/root/GameServer/" +str(value[0].player_id)).GetValue(find_value)
 			var enemyMDef = ServerData.enemy_data[value[3]]["MDef"]
 			var skillPower = ServerData.skill_data[value[0].skill_name].SkillPower
 			var final_damage = get_node("/root/GameServer/DamageProcessing").CalculatedMagicSkillDamage(playerMAtk, skillPower,enemyMDef)
 			return final_damage
-	
-	#var skill_name =  ServerData.skill_data[attack.skill_name].SkillName
-	#var map_node = get_node("/root/GameServer/"+ map + "Handler")
-	#var power = ServerData.skill_data[attack.skill_name].SkillPower
-	#var enemyMDef = ServerData.enemy_data[type[0]]["MDef"]
-	
-	
-	
-	
+
+"""ENEMY RECIVIENDO DAÑO DE PLAYERS"""
 func EnemyHurt(value):
 	var damage = CalculatingDamage(value)
 
@@ -147,34 +132,14 @@ func EnemyHurt(value):
 			var new_value = ServerData.inventary_data[player_nickname]
 			get_node("/root/GameServer").ServerSendDataToOneClient(value[2],key,new_value)
 
-
-
+"""ENEMY RECIVIENDO BUFF DEBUFF"""
 func EnemyBuffDebuff(value):
 	var multiplier = ServerData.skill_data[value[0].skill_name]["BuffDebuffMultiplier"]
-	var timer  = ServerData.skill_data[value[0].skill_name]["BuffDebuffTime"]
-	var key = ServerData.skill_data[value[0].skill_name]["BuffDebuffKey"]
-	#voy a hacer que mana touch de vida maxima solo para ver si funciona bien
-	print("correcto",value)
-	print("enemy_list",enemy_list[value[1]]["Health"])
+	var _timer  = ServerData.skill_data[value[0].skill_name]["BuffDebuffTime"]
+	var _key = ServerData.skill_data[value[0].skill_name]["BuffDebuffKey"]
 	enemy_list[value[1]]["Health"]  = (enemy_list[value[1]]["Health"] * multiplier)
-	print("enemy_list",enemy_list[value[1]]["Health"])
-	#estoy curando al enemigo
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 
-
+"""PLAYER TOMANDO DAÑO"""
 func PlayerHit(player_hurt, damage, _attack_caster_id):
 	var new_nickname = get_node("/root/GameServer/" + player_hurt).player_nickname
 	ServerData.player_data[new_nickname].health -= damage

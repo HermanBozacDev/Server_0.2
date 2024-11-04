@@ -10,7 +10,6 @@ var gameserver
 func _ready():
 	gameserver = get_node("/root/GameServer")
 	connect_to_server()  # Inicia la conexión al servidor
-
 func connect_to_server():
 	var result = peer.create_client(ip, port)
 	if result != OK:
@@ -21,22 +20,13 @@ func connect_to_server():
 	get_tree().set_multiplayer(multiplayer_api, self.get_path())  # Establecer la ruta para RPC
 	multiplayer.connected_to_server.connect(_on_connection_success)
 	multiplayer.connection_failed.connect(_on_connection_failed)
-
 func _on_connection_failed():
 	print("Error al conectarse al servidor")  # Mensaje de error
-
 func _on_connection_success():
 	print("CONECTADO AL HOST DE SERVIDORES EN AUTH")  # Mensaje de éxito
-
-@rpc
-func FetchToken(_player_id):
+@rpc func FetchToken(_player_id):
 	pass
-
-
-@rpc
-func DistributeLoginToken(_token, _new_gameserver):
+@rpc func DistributeLoginToken(_token, _new_gameserver):
 	pass
-
-@rpc
-func ReceiveLoginToken(token):
+@rpc func ReceiveLoginToken(token):
 	gameserver.expected_tokens.append(token)

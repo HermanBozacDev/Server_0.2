@@ -5,7 +5,7 @@
     "MDef": 10,
     "EnemyHealth": 100,
     "EnemyMaxHealth": 100,
-    "Exp": 65,
+    "Exp": 100,
     "EnemyState": "Idle",
     "time_out": 5,
     "A": null,

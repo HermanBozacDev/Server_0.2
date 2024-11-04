@@ -128,7 +128,7 @@
 	"ItemEffect": 0,
 	"AttackSpeed": 0,
 	"ItemSubType": "guantes",
-	"ItemSlotGroup": "Guantes",
+	"ItemSlotGroup": "Gloves",
 	"ItemCount": "false"
   },
   "Bone_Gloves": {
@@ -140,7 +140,7 @@
 	"ItemEffect": 0,
 	"AttackSpeed": 0,
 	"ItemSubType": "guantes",
-	"ItemSlotGroup": "Guantes",
+	"ItemSlotGroup": "Gloves",
 	"ItemCount": "false"
   },
   "Bone_Hat": {
@@ -152,7 +152,7 @@
 	"ItemEffect": 0,
 	"AttackSpeed": 0,
 	"ItemSubType": "Casco",
-	"ItemSlotGroup": "Cascos",
+	"ItemSlotGroup": "Hats",
 	"ItemCount": "false"
   },
   "Leather_Hat": {
@@ -164,7 +164,7 @@
 	"ItemEffect": 0,
 	"AttackSpeed": 0,
 	"ItemSubType": "Casco",
-	"ItemSlotGroup": "Cascos",
+	"ItemSlotGroup": "Hats",
 	"ItemCount": "false"
   },
   "Bone_Armor": {
@@ -192,7 +192,7 @@
 	"ItemCount": "false"
   },
   "Red_Tunic": {
-	"ItemName": "Red_Tunic	",
+	"ItemName": "Red_Tunic",
 	"ItemAttack": 0,
 	"ItemDefence": 5,
 	"ItemMagicDefence": 0,
@@ -201,6 +201,18 @@
 	"AttackSpeed": 0,
 	"ItemSubType": "armadura",
 	"ItemSlotGroup": "Armors",
+	"ItemCount": "false"
+  },
+  "Dark_Wings": {
+	"ItemName": "Dark_Wings",
+	"ItemAttack": 100,
+	"ItemDefence": 100,
+	"ItemMagicDefence": 0,
+	"ItemType": "Wings",
+	"ItemEffect": 0,
+	"AttackSpeed": 0,
+	"ItemSubType": "Wings",
+	"ItemSlotGroup": "Wings",
 	"ItemCount": "false"
   },
   "Red_Potion": {

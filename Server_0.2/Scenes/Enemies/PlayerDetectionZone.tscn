@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://Scenes/Enemies/PlayerDetectionZone.gd" id="1_1xduf"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_j5gnd"]
-radius = 128.0
+radius = 160.0
 
 [node name="PlayerDetectionZone" type="Area2D"]
 collision_layer = 0

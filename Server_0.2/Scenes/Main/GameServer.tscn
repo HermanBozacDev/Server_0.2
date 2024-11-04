@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://jn66l3ncfy7h"]
+[gd_scene load_steps=13 format=3 uid="uid://jn66l3ncfy7h"]
 
 [ext_resource type="Script" path="res://Scenes/Main/GameServer.gd" id="1_8p4xf"]
 [ext_resource type="Script" path="res://Scenes/Main/PlayerVerification.gd" id="2_jag3l"]
@@ -10,6 +10,7 @@
 [ext_resource type="PackedScene" uid="uid://dy48xkoyv3aow" path="res://Scenes/Maps/ServerCiudadPrincipal.tscn" id="6_lvwo1"]
 [ext_resource type="Script" path="res://Scenes/Main/StatsCalculated.gd" id="6_ng6qs"]
 [ext_resource type="PackedScene" uid="uid://bun4nh1lue3fo" path="res://Scenes/Maps/ServerMapa2.tscn" id="8_1aqku"]
+[ext_resource type="Script" path="res://Scenes/Main/CiudadCentralHandler.gd" id="9_uviv6"]
 [ext_resource type="Script" path="res://Scenes/Npcs/CameraMen.gd" id="10_jsms6"]
 
 [node name="GameServer" type="Node"]
@@ -36,10 +37,13 @@ script = ExtResource("5_418n1")
 [node name="Mapa2Handler" type="Node" parent="."]
 script = ExtResource("6_l7tct")
 
+[node name="CiudadCentralHandler" type="Node" parent="."]
+script = ExtResource("9_uviv6")
+
 [node name="CiudadPrincipal" parent="." instance=ExtResource("6_lvwo1")]
 
 [node name="Mapa2" parent="." instance=ExtResource("8_1aqku")]
-position = Vector2(1792, 0)
+position = Vector2(1792, -8)
 
 [node name="CameraMen" type="CharacterBody2D" parent="."]
 script = ExtResource("10_jsms6")
